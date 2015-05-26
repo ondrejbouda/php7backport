@@ -1,0 +1,15 @@
+{
+    "require": {
+        "php": ">=5.4.0",
+        "tracy/tracy": ">=2.3.2",
+        "nikic/php-parser": "*"
+    },
+    "require-dev": {
+        "nette/tester": ">=1.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+        	"Bouda\\": "src/Bouda/"
+        }
+    }
+}

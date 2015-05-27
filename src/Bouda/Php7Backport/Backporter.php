@@ -7,12 +7,23 @@ use PhpParser;
 
 class Backporter
 {
+	/** @var PhpParser\NodeTraverser */
+	private $traverser;
+
+	/** @var PhpParser\Parser */
+	private $parser;
+
+	/** @var PhpParser\PrettyPrinterAbstract */
+	private $printer;
+
+
 	public function __construct()
 	{
 		$this->traverser = new PhpParser\NodeTraverser;
 		$this->traverser->addVisitor(new Visitor);
 
 		$this->parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative);
+		
 		$this->printer = new PhpParser\PrettyPrinter\Standard;
 	}
 

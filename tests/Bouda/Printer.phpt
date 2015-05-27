@@ -2,9 +2,9 @@
 
 namespace BoudaTests;
 
-use Tester\Assert,
-    Bouda\Php7Backport\Printer,
-    PhpParser;
+use Tester\Assert;
+use Bouda\Php7Backport\Printer;
+use PhpParser;
 
 require_once __DIR__ . '/../bootstrap.php';
 

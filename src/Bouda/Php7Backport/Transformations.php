@@ -2,22 +2,22 @@
 
 namespace Bouda\Php7Backport;
 
-use PhpParser\Node,
-    PhpParser\Node\Arg,
-    PhpParser\Node\Name,
-    PhpParser\Node\Param,
-    PhpParser\Node\Stmt,
-    PhpParser\Node\Expr\FuncCall,
-    PhpParser\Node\Expr\BooleanNot,
-    PhpParser\Node\Expr\Isset_,
-    PhpParser\Node\Expr\Ternary,
-    PhpParser\Node\Expr\UnaryMinus,
-    PhpParser\Node\Expr\BinaryOp\BooleanAnd,
-    PhpParser\Node\Expr\BinaryOp\Coalesce,
-    PhpParser\Node\Expr\BinaryOp\Greater,
-    PhpParser\Node\Expr\BinaryOp\Smaller,
-    PhpParser\Node\Expr\BinaryOp\Spaceship,
-    PhpParser\Node\Scalar\LNumber;
+use PhpParser\Node;
+use PhpParser\Node\Arg;
+use PhpParser\Node\Name;
+use PhpParser\Node\Param;
+use PhpParser\Node\Stmt;
+use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Expr\BooleanNot;
+use PhpParser\Node\Expr\Isset_;
+use PhpParser\Node\Expr\Ternary;
+use PhpParser\Node\Expr\UnaryMinus;
+use PhpParser\Node\Expr\BinaryOp\BooleanAnd;
+use PhpParser\Node\Expr\BinaryOp\Coalesce;
+use PhpParser\Node\Expr\BinaryOp\Greater;
+use PhpParser\Node\Expr\BinaryOp\Smaller;
+use PhpParser\Node\Expr\BinaryOp\Spaceship;
+use PhpParser\Node\Scalar\LNumber;
 
 
 class Transformations

@@ -2,8 +2,8 @@
 
 namespace Bouda\Php7Backport;
 
-use PhpParser,
-    PhpParser\Node\Stmt;
+use PhpParser;
+use PhpParser\Node\Stmt;
 
 
 class Printer extends PhpParser\PrettyPrinter\Standard

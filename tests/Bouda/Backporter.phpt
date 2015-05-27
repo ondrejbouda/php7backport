@@ -2,10 +2,10 @@
 
 namespace BoudaTests;
 
-use Tester\Assert,
-    Tester\TestCase,
-    Bouda\Php7Backport\Backporter,
-    PhpParser;
+use Tester\Assert;
+use Tester\TestCase;
+use Bouda\Php7Backport\Backporter;
+use PhpParser;
 
 require_once __DIR__ . '/../bootstrap.php';
 

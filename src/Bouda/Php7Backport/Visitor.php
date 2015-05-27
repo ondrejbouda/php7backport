@@ -2,13 +2,13 @@
 
 namespace Bouda\Php7Backport;
 
-use PhpParser,
-    PhpParser\Node,
-    PhpParser\Node\Param,
-    PhpParser\Node\Stmt\Function_,
-    PhpParser\Node\Stmt\ClassMethod,
-    PhpParser\Node\Expr\BinaryOp\Coalesce,
-    PhpParser\Node\Expr\BinaryOp\Spaceship;
+use PhpParser;
+use PhpParser\Node;
+use PhpParser\Node\Param;
+use PhpParser\Node\Stmt\Function_;
+use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Expr\BinaryOp\Coalesce;
+use PhpParser\Node\Expr\BinaryOp\Spaceship;
 
 
 class Visitor extends PhpParser\NodeVisitorAbstract

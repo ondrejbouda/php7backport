@@ -89,7 +89,7 @@ class Transformations
 	 * @param PhpParser\Node\Stmt $node (Function_ or ClassMethod)
 	 * @return PhpParser\Node
 	 */
-	public static function removeReturnTypes(Stmt $node)
+	public static function removeReturnType(Stmt $node)
 	{
 		if (isset($node->returnType))
 		{

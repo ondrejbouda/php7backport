@@ -28,7 +28,7 @@ class Visitor extends PhpParser\NodeVisitorAbstract
 		}
 		elseif ($node instanceof Function_ || $node instanceof ClassMethod)
 		{
-			return Transformations::removeReturnTypes($node);
+			return Transformations::removeReturnType($node);
 		}
 		elseif ($node instanceof Spaceship)
 		{

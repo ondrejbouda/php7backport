@@ -70,7 +70,7 @@ class Transformations
         {
             if (in_array($node->type->parts[0], ['int', 'float', 'string', 'bool']))
             {
-                $node->type = NULL;
+                $node->type = null;
             }
         }
 
@@ -93,7 +93,7 @@ class Transformations
     {
         if (isset($node->returnType))
         {
-            $node->returnType = NULL;
+            $node->returnType = null;
         }
 
         return $node;

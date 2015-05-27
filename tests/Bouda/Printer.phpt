@@ -17,25 +17,14 @@ $code = '<?php
 
 namespace Bouda;
 
-use Namespace1, Namespace2;
-
-
+use Namespace1;
+use Namespace2;
 class x
 {
-    private $var1;
-
-    private $var2;
-
     function first()
     {
         return 1;
     }
-
-    function second()
-    {
-        return 2;
-    }
-
 }
 ';
 

@@ -37,15 +37,16 @@ class Backporter
 	 */
 	public function port($code)
 	{
+		// add starting <?php tag if necessary
 		if (strpos($code, '<?') === false)
 		{
-			$code = '<?' . $code;
+			$code = '<?php ' . $code;
 		}
 
 		$parsedStatements = $this->parser->parse($code);
 
 		$portedStatements = $this->traverser->traverse($parsedStatements);
 
-		return $this->printer->prettyPrint($portedStatements);
+		return $this->printer->prettyPrintFile($portedStatements);
 	}
 }

@@ -17,14 +17,14 @@ class Backporter
 	private $printer;
 
 
-	public function __construct()
+	public function __construct(PrettyPrinterAbstract $printer)
 	{
 		$this->traverser = new PhpParser\NodeTraverser;
 		$this->traverser->addVisitor(new Visitor);
 
 		$this->parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative);
 		
-		$this->printer = new PhpParser\PrettyPrinter\Standard;
+		$this->printer = $printer;
 	}
 
 

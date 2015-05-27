@@ -9,7 +9,7 @@ use Tester\Assert,
 require_once __DIR__ . '/../bootstrap.php';
 
 
-$backporter = new Backporter;
+$backporter = new Backporter(new PhpParser\PrettyPrinter\Standard);
 
 
 $code = '$foo ?? $bar;';

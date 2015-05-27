@@ -12,7 +12,7 @@ class Backporter
 		$this->traverser = new PhpParser\NodeTraverser;
 		$this->traverser->addVisitor(new Visitor);
 
-		$this->parser = new PhpParser\Parser(new PhpParser\Lexer);
+		$this->parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative);
 		$this->printer = new PhpParser\PrettyPrinter\Standard;
 	}
 

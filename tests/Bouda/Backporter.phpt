@@ -25,3 +25,8 @@ Assert::equal($backporter->port($expected), $backporter->port($code));
 $code = 'function foo() : SomeClass {}';
 $expected = 'function foo() {}';
 Assert::equal($backporter->port($expected), $backporter->port($code));
+
+
+$code = '$foo <=> $bar;';
+$expected = '$foo > $bar ? 1 : ($foo < $bar ? -1 : 0);';
+Assert::equal($backporter->port($expected), $backporter->port($code));

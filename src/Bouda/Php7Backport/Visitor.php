@@ -7,7 +7,8 @@ use PhpParser,
 	PhpParser\Node\Param,
 	PhpParser\Node\Stmt\Function_,
 	PhpParser\Node\Stmt\ClassMethod,
-	PhpParser\Node\Expr\BinaryOp\Coalesce;
+	PhpParser\Node\Expr\BinaryOp\Coalesce,
+	PhpParser\Node\Expr\BinaryOp\Spaceship;
 
 
 class Visitor extends PhpParser\NodeVisitorAbstract
@@ -28,6 +29,10 @@ class Visitor extends PhpParser\NodeVisitorAbstract
 		elseif ($node instanceof Function_ || $node instanceof ClassMethod)
 		{
 			return Transformations::removeReturnTypes($node);
+		}
+		elseif ($node instanceof Spaceship)
+		{
+			return Transformations::transformSpaceship($node);
 		}
 	}
 }

@@ -11,8 +11,13 @@ use PhpParser\Node,
 	PhpParser\Node\Expr\BooleanNot,
 	PhpParser\Node\Expr\Isset_,
 	PhpParser\Node\Expr\Ternary,
+	PhpParser\Node\Expr\UnaryMinus,
 	PhpParser\Node\Expr\BinaryOp\BooleanAnd,
-	PhpParser\Node\Expr\BinaryOp\Coalesce;
+	PhpParser\Node\Expr\BinaryOp\Coalesce,
+	PhpParser\Node\Expr\BinaryOp\Greater,
+	PhpParser\Node\Expr\BinaryOp\Smaller,
+	PhpParser\Node\Expr\BinaryOp\Spaceship,
+	PhpParser\Node\Scalar\LNumber;
 
 
 class Transformations
@@ -21,11 +26,11 @@ class Transformations
 	 * Transform null coalesce operator expression into ternary-isset-isnull expression.
 	 *
 	 * Example: 
-	 * $one ?? $two
+	 * $foo ?? $bar
 	 * becomes
-	 * isset($one) && !is_null($one) ? $one : $two
+	 * isset($foo) && !is_null($foo) ? $foo : $bar
 	 *
-	 * @param PhpParser\Node $node
+	 * @param PhpParser\Node\Expr\BinaryOp\Coalesce $node
 	 * @return PhpParser\Node
 	 */
 	public static function transformNullCoalesce(Coalesce $node)
@@ -92,5 +97,36 @@ class Transformations
 		}
 
 		return $node;
+	}
+
+
+	/**
+	 * Transform spaceship operator expression into ternary-greater-smaller expression.
+	 *
+	 * Example: 
+	 * $foo <=> $bar
+	 * becomes
+	 * $foo > $bar ? 1 : ($foo < $bar ? -1 : 0)
+	 *
+	 * @param PhpParser\Node\Expr\BinaryOp\Spaceship $node
+	 * @return PhpParser\Node
+	 */
+	public static function transformSpaceship(Spaceship $node)
+	{
+		return new Ternary(
+			new Greater(
+				$node->left,
+				$node->right
+			),
+			new LNumber(1),
+			new Ternary(
+				new Smaller(
+					$node->left,
+					$node->right
+				),
+				new LNumber(-1),
+				new LNumber(0)
+			)
+		);
 	}
 }

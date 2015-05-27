@@ -17,7 +17,7 @@ class Backporter
 	private $printer;
 
 
-	public function __construct(PrettyPrinterAbstract $printer)
+	public function __construct(PhpParser\PrettyPrinterAbstract $printer)
 	{
 		$this->traverser = new PhpParser\NodeTraverser;
 		$this->traverser->addVisitor(new Visitor);

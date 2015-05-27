@@ -24,7 +24,7 @@ class Backporter
 	 * @return string ported code
 	 * @throws PhpParser\Error
 	 */
-	public function port(string $code)
+	public function port($code)
 	{
 		if (strpos($code, '<?') === false)
 		{

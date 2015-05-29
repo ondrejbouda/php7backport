@@ -51,6 +51,31 @@ class BackporterTest extends TestCase
         $expected = '<?php $foo > $bar ? 1 : ($foo < $bar ? -1 : 0);';
         Assert::equal($expected, $this->backporter->port($code));
     }
+
+
+    public function testComplexCode()
+    {
+        $code = '<?php 
+
+function foo(string $x,   SomeClass $y) : int
+{
+    // comment
+    return $foo ?? $one <=> $two;
+}
+
+';
+
+        $expected = '<?php 
+
+function foo($x, SomeClass $y)
+{
+    // comment
+    return isset($foo) && !is_null($foo) ? $foo : ($one > $two ? 1 : ($one < $two ? -1 : 0));
+}
+
+';
+        Assert::equal($expected, $this->backporter->port($code));
+    }
 }
 
 

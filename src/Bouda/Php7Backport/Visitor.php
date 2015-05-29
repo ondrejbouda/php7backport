@@ -101,8 +101,18 @@ class Visitor extends PhpParser\NodeVisitorAbstract
     }
 
 
-    public function getChangedNodes()
+    public function getSortedChangedNodes()
     {
-        return $this->changedNodes;
+        $result = [];
+
+        // reindex by start position
+        foreach($this->changedNodes as $key => $changedNode)
+        {
+            $result[$changedNode->getOriginalStartPosition()] = $changedNode;
+        }
+
+        ksort($result);
+
+        return $result;
     }
 }

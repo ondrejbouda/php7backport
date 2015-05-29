@@ -60,7 +60,7 @@ class Backporter
 
         $offset = 0;
 
-        foreach ($visitor->getChangedNodes() as $changedNode)
+        foreach ($visitor->getSortedChangedNodes() as $changedNode)
         {
             $start = $changedNode->getOriginalStartPosition($offset);
             $end = $changedNode->getOriginalEndPosition($offset);

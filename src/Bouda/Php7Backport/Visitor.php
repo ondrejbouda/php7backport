@@ -16,23 +16,26 @@ class Visitor extends PhpParser\NodeVisitorAbstract
     /**
      * Recognize which nodes to change.
      */
-    public function enterNode(Node $node)
+    public function leaveNode(Node $node)
     {
         if ($node instanceof Coalesce)
         {
-            return Transformations::transformNullCoalesce($node);
+            return Transformation\Coalesce::transform($node);
         }
-        elseif ($node instanceof Param)
+        elseif ($node instanceof Param
+            && isset($node->type->parts[0]) 
+            && in_array($node->type->parts[0], ['int', 'float', 'string', 'bool']))
         {
-            return Transformations::removeScalarTypeHint($node);
+            return Transformation\ScalarTypehint::transform($node);
         }
-        elseif ($node instanceof Function_ || $node instanceof ClassMethod)
+        elseif (($node instanceof Function_ || $node instanceof ClassMethod)
+            && isset($node->returnType))
         {
-            return Transformations::removeReturnType($node);
+            return Transformation\ReturnType::transform($node);
         }
         elseif ($node instanceof Spaceship)
         {
-            return Transformations::transformSpaceship($node);
+            return Transformation\Spaceship::transform($node);
         }
     }
 }

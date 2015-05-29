@@ -4,6 +4,7 @@ namespace Bouda\Php7Backport\Transformation;
 
 use PhpParser\Node;
 use PhpParser\Node\Param;
+use Bouda\Php7Backport\ChangedNode;
 
 
 class ScalarTypehint
@@ -17,13 +18,13 @@ class ScalarTypehint
      * function foo($x, SomeClass $y) {...
      *
      * @param PhpParser\Node\Param $node
-     * @return PhpParser\Node
+     * @return Bouda\Php7Backport\ChangedNode
      */
     public static function transform(Param $node)
     {
         $node->type = null;
         $node->setAttribute('changed', true);
 
-        return $node;
+        return new ChangedNode($node);
     }
 }

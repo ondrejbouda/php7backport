@@ -11,6 +11,7 @@ use PhpParser\Node\Expr\Isset_;
 use PhpParser\Node\Expr\Ternary;
 use PhpParser\Node\Expr\BinaryOp\BooleanAnd;
 use PhpParser\Node\Expr\BinaryOp\Coalesce as CoalesceNode;
+use Bouda\Php7Backport\ChangedNode;
 
 
 class Coalesce
@@ -24,11 +25,11 @@ class Coalesce
      * isset($foo) && !is_null($foo) ? $foo : $bar
      *
      * @param PhpParser\Node\Expr\BinaryOp\Coalesce $node
-     * @return PhpParser\Node
+     * @return Bouda\Php7Backport\ChangedNode
      */
     public static function transform(CoalesceNode $node)
     {
-        return new Ternary(
+        return new ChangedNode(new Ternary(
             new BooleanAnd(
                 new Isset_([$node->left]), 
                 new BooleanNot(
@@ -43,6 +44,6 @@ class Coalesce
             $node->left,
             $node->right,
             $node->getAttributes() + ['changed' => true]
-        );
+        ));
     }
 }

@@ -23,22 +23,22 @@ class Visitor extends PhpParser\NodeVisitorAbstract
     {
         if ($node instanceof Coalesce)
         {
-            $node = Transformation\Coalesce::transform($node);
+            $changedNode = Transformation\Coalesce::transform($node);
         }
         elseif ($node instanceof Param
             && isset($node->type->parts[0]) 
             && in_array($node->type->parts[0], ['int', 'float', 'string', 'bool']))
         {
-            $node = Transformation\ScalarTypehint::transform($node);
+            $changedNode = Transformation\ScalarTypehint::transform($node);
         }
         elseif (($node instanceof Function_ || $node instanceof ClassMethod)
             && isset($node->returnType))
         {
-            $node = Transformation\ReturnType::transform($node);
+            $changedNode = Transformation\ReturnType::transform($node);
         }
         elseif ($node instanceof Spaceship)
         {
-            $node = Transformation\Spaceship::transform($node);
+            $changedNode = Transformation\Spaceship::transform($node);
         }
         else
         {
@@ -46,30 +46,49 @@ class Visitor extends PhpParser\NodeVisitorAbstract
             return;
         }
 
-        $this->changedNodes[$this->getNodeId($node)] = $node;
-        $this->removeChangedChildren($node);
-        return $node;
-    }
-
-
-    private function removeChangedChildren(Node $node)
-    {
-        array_walk_recursive($node, function(&$item) {
-            if ($item instanceof Node)
-            {
-                if ($item->getAttribute('changed') === true)
-                {
-                    $item->setAttribute('changed', false);
-                    unset($this->changedNodes[$this->getNodeId($item)]);
-                }
-            }
-        });
+        $this->addChangedNode($changedNode);
+        
+        return $changedNode->getNode();
     }
 
 
     private function getNodeId(Node $node)
     {
-        return $node->getAttribute('startFilePos') . $node->getAttribute('endFilePos');
+        if ($node !== null)
+        {
+            return $node->getAttribute('startFilePos')
+                 . '_'
+                 . $node->getAttribute('endFilePos');
+        }
+
+        return null;
+    }
+
+
+    private function addChangedNode(ChangedNode $changedNode)
+    {
+
+        $this->changedNodes[$this->getNodeId($changedNode->getNode())] = $changedNode;
+
+        $this->removeChangedChildren($changedNode);
+    }
+
+
+    private function removeChangedChildren(ChangedNode $changedNode)
+    {
+        $nodes = $changedNode->getNode();
+        array_walk_recursive($nodes, function(&$item) {
+            if ($item instanceof Node)
+            {
+                $node = $item;
+
+                if ($item->getAttribute('changed') === true)
+                {
+                    $item->setAttribute('changed', false);
+                    unset($this->changedNodes[$this->getNodeId($node)]);
+                }
+            }
+        });
     }
 
 

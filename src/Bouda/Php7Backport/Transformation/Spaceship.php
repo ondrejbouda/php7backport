@@ -8,6 +8,7 @@ use PhpParser\Node\Expr\BinaryOp\Greater;
 use PhpParser\Node\Expr\BinaryOp\Smaller;
 use PhpParser\Node\Expr\BinaryOp\Spaceship as SpaceshipNode;
 use PhpParser\Node\Scalar\LNumber;
+use Bouda\Php7Backport\ChangedNode;
 
 
 class Spaceship
@@ -21,11 +22,11 @@ class Spaceship
      * $foo > $bar ? 1 : ($foo < $bar ? -1 : 0)
      *
      * @param PhpParser\Node\Expr\BinaryOp\Spaceship $node
-     * @return PhpParser\Node
+     * @return Bouda\Php7Backport\ChangedNode
      */
     public static function transform(SpaceshipNode $node)
     {
-        return new Ternary(
+        return new ChangedNode(new Ternary(
             new Greater(
                 $node->left,
                 $node->right
@@ -40,6 +41,6 @@ class Spaceship
                 new LNumber(0)
             ),
             $node->getAttributes() + ['changed' => true]
-        );
+        ));
     }
 }

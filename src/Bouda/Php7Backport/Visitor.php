@@ -47,7 +47,23 @@ class Visitor extends PhpParser\NodeVisitorAbstract
         }
 
         $this->changedNodes[$this->getNodeId($node)] = $node;
+        $this->removeChangedChildren($node);
         return $node;
+    }
+
+
+    private function removeChangedChildren(Node $node)
+    {
+        array_walk_recursive($node, function(&$item) {
+            if ($item instanceof Node)
+            {
+                if ($item->getAttribute('changed') === true)
+                {
+                    $item->setAttribute('changed', false);
+                    unset($this->changedNodes[$this->getNodeId($item)]);
+                }
+            }
+        });
     }
 
 

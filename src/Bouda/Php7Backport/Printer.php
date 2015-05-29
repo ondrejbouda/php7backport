@@ -3,31 +3,42 @@
 namespace Bouda\Php7Backport;
 
 use PhpParser;
+use PhpParser\Node;
 use PhpParser\Node\Stmt;
 
 
 class Printer extends PhpParser\PrettyPrinter\Standard
 {
     /**
-     * Add newline at the end of file. 
-     * Remove trailing whitespace.
+     * Print single node. 
+     *  
+     * @param PhpParser\Node 
+     * @return string
      */
-    public function prettyPrintFile(array $stmts)
+    public function printNode(Node $node)
     {
-        $output = parent::prettyPrintFile($stmts) . "\n";
-
-        return $this->removeTrailingWhitespace($output);
+        return $this->p($node);
     }
 
 
-    protected function removeTrailingWhitespace($input)
+    public function pStmt_ClassMethod(Stmt\ClassMethod $node)
     {
-        $lines = explode("\n", $input);
+        return $this->printFunctionHeader($node);
+    }
 
-        array_walk($lines, function(&$line) {
-            $line = rtrim($line);
-        });
 
-        return implode("\n", $lines);
+    public function pStmt_Function(Stmt\Function_ $node)
+    {
+        return $this->printFunctionHeader($node);
+    }
+
+
+    /**
+     * Print only header of function.
+     */
+    protected function printFunctionHeader(Node $node)
+    {
+        return 'function ' . ($node->byRef ? '&' : '') . $node->name
+             . '(' . $this->pCommaSeparated($node->params) . ')';
     }
 }

@@ -17,39 +17,39 @@ class BackporterTest extends TestCase
 
     public function setUp()
     {
-        $this->backporter = new Backporter(new PhpParser\PrettyPrinter\Standard);
+        $this->backporter = new Backporter();
     }
 
 
     public function testCoalesceOperator()
     {
-        $code = '$foo ?? $bar;';
-        $expected = 'isset($foo) && !is_null($foo) ? $foo : $bar;';
-        Assert::equal($this->backporter->port($expected), $this->backporter->port($code));
+        $code = '<?php $foo ?? $bar;';
+        $expected = '<?php isset($foo) && !is_null($foo) ? $foo : $bar;';
+        Assert::equal($expected, $this->backporter->port($code));
     }
 
 
     public function testScalarTypeHint()
     {
-        $code = 'function foo(string $x, SomeClass $y) {}';
-        $expected = 'function foo($x, SomeClass $y) {}';
-        Assert::equal($this->backporter->port($expected), $this->backporter->port($code));
+        $code = '<?php function foo(string $x, SomeClass $y) {}';
+        $expected = '<?php function foo($x, SomeClass $y) {}';
+        Assert::equal($expected, $this->backporter->port($code));
     }
 
 
     public function testReturnType()
     {
-        $code = 'function foo() : SomeClass {}';
-        $expected = 'function foo() {}';
-        Assert::equal($this->backporter->port($expected), $this->backporter->port($code));
+        $code = '<?php function foo() : SomeClass {}';
+        $expected = '<?php function foo() {}';
+        Assert::equal($expected, $this->backporter->port($code));
     }
 
 
     public function testSpaceshipOperator()
     {
-        $code = '$foo <=> $bar;';
-        $expected = '$foo > $bar ? 1 : ($foo < $bar ? -1 : 0);';
-        Assert::equal($this->backporter->port($expected), $this->backporter->port($code));
+        $code = '<?php $foo <=> $bar;';
+        $expected = '<?php $foo > $bar ? 1 : ($foo < $bar ? -1 : 0);';
+        Assert::equal($expected, $this->backporter->port($code));
     }
 }
 

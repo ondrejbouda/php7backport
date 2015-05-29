@@ -13,7 +13,15 @@ use PhpParser\Node\Expr\BinaryOp\Spaceship;
 
 class Visitor extends PhpParser\NodeVisitorAbstract
 {
+    private $tokens;
+
     private $changedNodes = [];
+
+
+    public function __construct(array $tokens)
+    {
+        $this->tokens = $tokens;
+    }
 
 
     /**
@@ -35,6 +43,7 @@ class Visitor extends PhpParser\NodeVisitorAbstract
             && isset($node->returnType))
         {
             $changedNode = Transformation\ReturnType::transform($node);
+            Transformation\ReturnType::setOriginalEndOfHeaderPosition($node, $this->tokens);
         }
         elseif ($node instanceof Spaceship)
         {

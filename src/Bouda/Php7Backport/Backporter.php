@@ -3,28 +3,18 @@
 namespace Bouda\Php7Backport;
 
 use PhpParser;
+use PhpParser\Node;
 
 
 class Backporter
 {
-    /** @var PhpParser\NodeTraverser */
-    private $traverser;
-
-    /** @var PhpParser\Parser */
-    private $parser;
-
     /** @var PhpParser\PrettyPrinterAbstract */
     private $printer;
 
 
-    public function __construct(PhpParser\PrettyPrinterAbstract $printer)
+    public function __construct()
     {
-        $this->traverser = new PhpParser\NodeTraverser;
-        $this->traverser->addVisitor(new Visitor);
-
-        $this->parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative);
-        
-        $this->printer = $printer;
+        $this->printer = new Printer;
     }
 
 
@@ -37,16 +27,55 @@ class Backporter
      */
     public function port($code)
     {
+        $lexer = new PhpParser\Lexer\Emulative(array(
+            'usedAttributes' => array(
+                'comments',
+                'startLine',
+                'endLine',
+                'startFilePos',
+                'endFilePos',
+                'startTokenPos',
+                'endTokenPos'
+            )
+        ));
+
+        $parser = new PhpParser\Parser($lexer);
+
+        $traverser = new PhpParser\NodeTraverser;
+        
         // add starting <?php tag if necessary
         if (strpos($code, '<?') === false)
         {
             $code = '<?php ' . $code;
         }
 
-        $parsedStatements = $this->parser->parse($code);
+        $parsedStatements = $parser->parse($code);
 
-        $portedStatements = $this->traverser->traverse($parsedStatements);
+        $tokens = $lexer->getTokens();
 
-        return $this->printer->prettyPrintFile($portedStatements);
+        $visitor = new Visitor($tokens);
+        $traverser->addVisitor($visitor);
+
+        $portedStatements = $traverser->traverse($parsedStatements);
+
+        $offset = 0;
+
+        foreach ($visitor->getChangedNodes() as $changedNode)
+        {
+            $start = $changedNode->getOriginalStartPosition($offset);
+            $end = $changedNode->getOriginalEndPosition($offset);
+            
+            $originalLength = $changedNode->getOriginalLength();
+            
+            $renderedNode = $this->printer->printNode($changedNode->getNode());
+
+            $newLength = strlen($renderedNode);
+
+            $code = substr_replace($code, $renderedNode, $start, $originalLength);
+
+            $offset += $newLength - $originalLength;
+        }
+
+        return $code;
     }
 }

@@ -13,6 +13,9 @@ use PhpParser\Node\Expr\BinaryOp\Spaceship;
 
 class Visitor extends PhpParser\NodeVisitorAbstract
 {
+    private $changedNodes = [];
+
+
     /**
      * Recognize which nodes to change.
      */
@@ -20,22 +23,42 @@ class Visitor extends PhpParser\NodeVisitorAbstract
     {
         if ($node instanceof Coalesce)
         {
-            return Transformation\Coalesce::transform($node);
+            $node = Transformation\Coalesce::transform($node);
         }
         elseif ($node instanceof Param
             && isset($node->type->parts[0]) 
             && in_array($node->type->parts[0], ['int', 'float', 'string', 'bool']))
         {
-            return Transformation\ScalarTypehint::transform($node);
+            $node = Transformation\ScalarTypehint::transform($node);
         }
         elseif (($node instanceof Function_ || $node instanceof ClassMethod)
             && isset($node->returnType))
         {
-            return Transformation\ReturnType::transform($node);
+            $node = Transformation\ReturnType::transform($node);
         }
         elseif ($node instanceof Spaceship)
         {
-            return Transformation\Spaceship::transform($node);
+            $node = Transformation\Spaceship::transform($node);
         }
+        else
+        {
+            // nothing to do
+            return;
+        }
+
+        $this->changedNodes[$this->getNodeId($node)] = $node;
+        return $node;
+    }
+
+
+    private function getNodeId(Node $node)
+    {
+        return $node->getAttribute('startFilePos') . $node->getAttribute('endFilePos');
+    }
+
+
+    public function getChangedNodes()
+    {
+        return $this->changedNodes;
     }
 }

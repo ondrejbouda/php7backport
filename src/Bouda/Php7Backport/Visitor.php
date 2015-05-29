@@ -15,12 +15,13 @@ class Visitor extends PhpParser\NodeVisitorAbstract
 {
     private $tokens;
 
-    private $changedNodes = [];
+    private $changedNodes;
 
 
-    public function __construct(array $tokens)
+    public function __construct(array $tokens, ChangedNodes $changedNodes)
     {
         $this->tokens = $tokens;
+        $this->changedNodes = $changedNodes;
     }
 
 
@@ -55,64 +56,8 @@ class Visitor extends PhpParser\NodeVisitorAbstract
             return;
         }
 
-        $this->addChangedNode($changedNode);
+        $this->changedNodes->addNode($changedNode);
         
         return $changedNode->getNode();
-    }
-
-
-    private function getNodeId(Node $node)
-    {
-        if ($node !== null)
-        {
-            return $node->getAttribute('startFilePos')
-                 . '_'
-                 . $node->getAttribute('endFilePos');
-        }
-
-        return null;
-    }
-
-
-    private function addChangedNode(ChangedNode $changedNode)
-    {
-
-        $this->changedNodes[$this->getNodeId($changedNode->getNode())] = $changedNode;
-
-        $this->removeChangedChildren($changedNode);
-    }
-
-
-    private function removeChangedChildren(ChangedNode $changedNode)
-    {
-        $nodes = $changedNode->getNode();
-        array_walk_recursive($nodes, function(&$item) {
-            if ($item instanceof Node)
-            {
-                $node = $item;
-
-                if ($item->getAttribute('changed') === true)
-                {
-                    $item->setAttribute('changed', false);
-                    unset($this->changedNodes[$this->getNodeId($node)]);
-                }
-            }
-        });
-    }
-
-
-    public function getSortedChangedNodes()
-    {
-        $result = [];
-
-        // reindex by start position
-        foreach($this->changedNodes as $key => $changedNode)
-        {
-            $result[$changedNode->getOriginalStartPosition()] = $changedNode;
-        }
-
-        ksort($result);
-
-        return $result;
     }
 }

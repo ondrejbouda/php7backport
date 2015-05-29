@@ -53,14 +53,16 @@ class Backporter
 
         $tokens = $lexer->getTokens();
 
-        $visitor = new Visitor($tokens);
+        $changedNodes = new ChangedNodes;
+
+        $visitor = new Visitor($tokens, $changedNodes);
         $traverser->addVisitor($visitor);
 
         $portedStatements = $traverser->traverse($parsedStatements);
 
         $offset = 0;
 
-        foreach ($visitor->getSortedChangedNodes() as $changedNode)
+        foreach ($changedNodes->getSortedNodes() as $changedNode)
         {
             $start = $changedNode->getOriginalStartPosition($offset);
             $end = $changedNode->getOriginalEndPosition($offset);

@@ -24,7 +24,23 @@ class BackporterTest extends TestCase
     public function testCoalesceOperator()
     {
         $code = '<?php $foo ?? $bar;';
-        $expected = '<?php isset($foo) && !is_null($foo) ? $foo : $bar;';
+        $expected = '<?php isset($foo) ? $foo : $bar;';
+        Assert::equal($expected, $this->backporter->port($code));
+
+        $code = '<?php $foo->bar ?? $bar;';
+        $expected = '<?php isset($foo->bar) ? $foo->bar : $bar;';
+        Assert::equal($expected, $this->backporter->port($code));
+
+        $code = '<?php Foo::$bar ?? $bar;';
+        $expected = '<?php isset(Foo::$bar) ? Foo::$bar : $bar;';
+        Assert::equal($expected, $this->backporter->port($code));
+
+        $code = '<?php $array[0] ?? $bar;';
+        $expected = '<?php isset($array[0]) ? $array[0] : $bar;';
+        Assert::equal($expected, $this->backporter->port($code));
+
+        $code = '<?php 42 ?? $bar;';
+        $expected = '<?php !is_null(42) ? 42 : $bar;';
         Assert::equal($expected, $this->backporter->port($code));
     }
 
@@ -70,7 +86,7 @@ function foo(string $x,   SomeClass $y) : int
 function foo($x, SomeClass $y)
 {
     // comment
-    return isset($foo) && !is_null($foo) ? $foo : ($one > $two ? 1 : ($one < $two ? -1 : 0));
+    return isset($foo) ? $foo : ($one > $two ? 1 : ($one < $two ? -1 : 0));
 }
 
 ';

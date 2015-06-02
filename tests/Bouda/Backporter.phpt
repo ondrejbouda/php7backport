@@ -92,6 +92,29 @@ function foo($x, SomeClass $y)
 ';
         Assert::equal($expected, $this->backporter->port($code));
     }
+
+
+    public function testConstructor()
+    {
+        $code = '<?php 
+
+class Foo
+{
+    function Foo($bar) {}
+}
+
+';
+
+        $expected = '<?php 
+
+class Foo
+{
+    function __construct($bar) {}
+}
+
+';
+        Assert::equal($expected, $this->backporter->port($code));
+    }
 }
 
 

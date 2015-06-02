@@ -6,6 +6,7 @@ use PhpParser;
 use PhpParser\Node;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Function_;
+use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Expr\BinaryOp\Coalesce;
 use PhpParser\Node\Expr\BinaryOp\Spaceship;
@@ -50,14 +51,23 @@ class Visitor extends PhpParser\NodeVisitorAbstract
         {
             $changedNode = Transformation\Spaceship::transform($node);
         }
-        else
+        elseif ($node instanceof Class_)
         {
-            // nothing to do
-            return;
+            $className = $node->name;
+
+            foreach ($node->stmts as $stmt)
+            {
+                if ($stmt instanceof ClassMethod && $stmt->name == $className)
+                {
+                    $changedNode = Transformation\Constructor::transform($stmt);
+                    Transformation\Constructor::setOriginalEndOfHeaderPosition($stmt, $this->tokens);
+                }
+            }
         }
 
-        $this->changedNodes->addNode($changedNode);
-        
-        return $changedNode->getNode();
+        if (isset($changedNode))
+        {
+            $this->changedNodes->addNode($changedNode);
+        }
     }
 }

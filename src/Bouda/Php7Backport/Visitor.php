@@ -29,30 +29,10 @@ abstract class Visitor extends PhpParser\NodeVisitorAbstract
         $currentTokenPosition = $node->getAttribute('startTokenPos');
 
         $offset = 0;
-
-
-        // find first occurence of "{" (start of body)
-        do
-        {
-            $currentToken = $this->tokens[$currentTokenPosition];
-
-            $offset += is_array($currentToken) ? strlen($currentToken[1]) : strlen($currentToken);
-            
-            $currentTokenPosition++;
-        }
-        while ($currentToken != "{");
-
-        $currentTokenPosition--;
-        $currentToken = $this->tokens[$currentTokenPosition];
-        $offset -= is_array($currentToken) ? strlen($currentToken[1]) : strlen($currentToken);
-
-        $currentTokenPosition--;
-        $currentToken = $this->tokens[$currentTokenPosition];
-        if (is_array($currentToken) && $currentToken[0] == T_WHITESPACE)
-        {
-            $offset -= is_array($currentToken) ? strlen($currentToken[1]) : strlen($currentToken);
-        }
-
+        // find the beginning of body of function
+        $offset += $this->findNextToken($currentTokenPosition, '{');
+        // leave last whitespace before (if present)
+        $offset -= $this->goBackIfToken($currentTokenPosition, T_WHITESPACE);
 
         $endFilePos =  $node->getAttribute('startFilePos') + $offset;
 
@@ -60,5 +40,56 @@ abstract class Visitor extends PhpParser\NodeVisitorAbstract
         $endFilePos -= 1;
 
         $node->setAttribute('endFilePos', $endFilePos);
+    }
+
+
+    protected function findNextToken(&$currentPosition, $token)
+    {
+        $offset = 0;
+
+        $currentToken = $this->tokens[$currentPosition];
+
+        while (!$this->isTokenEqual($currentToken, $token))
+        {
+            $offset += $this->getTokenLength($currentToken);
+            
+            $currentPosition++;
+
+            $currentToken = $this->tokens[$currentPosition];
+        }
+        
+
+        return $offset;
+    }
+
+
+    protected function goBackIfToken(&$currentPosition, $token)
+    {
+        $currentPosition--;
+        $currentToken = $this->tokens[$currentPosition];
+        
+        if ($this->isTokenEqual($currentToken, $token))
+        {
+            return $this->getTokenLength($currentToken);
+        }
+    }
+
+
+    protected function getTokenLength($token)
+    {
+        return is_array($token) ? strlen($token[1]) : strlen($token);
+    }
+
+
+    protected function isTokenEqual($token, $value)
+    {
+        if (is_numeric($value))
+        {
+            return is_array($token) && $token[0] === $value;
+        }
+        else
+        {
+            return $token === $value;
+        }
     }
 }

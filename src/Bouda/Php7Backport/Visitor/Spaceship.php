@@ -1,6 +1,9 @@
 <?php
 
-namespace Bouda\Php7Backport\Transformation;
+namespace Bouda\Php7Backport\Visitor;
+
+use Bouda\Php7Backport;
+use Bouda\Php7Backport\ChangedNode;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr\Ternary;
@@ -8,11 +11,21 @@ use PhpParser\Node\Expr\BinaryOp\Greater;
 use PhpParser\Node\Expr\BinaryOp\Smaller;
 use PhpParser\Node\Expr\BinaryOp\Spaceship as SpaceshipNode;
 use PhpParser\Node\Scalar\LNumber;
-use Bouda\Php7Backport\ChangedNode;
 
 
-class Spaceship
+class Spaceship extends Php7Backport\Visitor
 {
+    public function leaveNode(Node $node)
+    {
+        if ($node instanceof SpaceshipNode)
+        {
+            $changedNode = $this->transform($node);
+
+            $this->changedNodes->addNode($changedNode);
+        }
+    }
+
+
     /**
      * Transform spaceship operator expression into ternary-greater-smaller expression.
      *
@@ -24,7 +37,7 @@ class Spaceship
      * @param PhpParser\Node\Expr\BinaryOp\Spaceship $node
      * @return Bouda\Php7Backport\ChangedNode
      */
-    public static function transform(SpaceshipNode $node)
+    private function transform(SpaceshipNode $node)
     {
         return new ChangedNode(new Ternary(
             new Greater(

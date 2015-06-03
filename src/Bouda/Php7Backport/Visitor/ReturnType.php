@@ -1,14 +1,31 @@
 <?php
 
-namespace Bouda\Php7Backport\Transformation;
+namespace Bouda\Php7Backport\Visitor;
+
+use Bouda\Php7Backport;
+use Bouda\Php7Backport\ChangedNode;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt;
-use Bouda\Php7Backport\ChangedNode;
+use PhpParser\Node\Stmt\Function_;
+use PhpParser\Node\Stmt\ClassMethod;
 
 
-class ReturnType
+class ReturnType extends Php7Backport\Visitor
 {
+    public function leaveNode(Node $node)
+    {
+        if (($node instanceof Function_ || $node instanceof ClassMethod)
+            && isset($node->returnType))
+        {
+            $changedNode = $this->transform($node);
+            $this->setOriginalEndOfHeaderPosition($node, $this->tokens);
+
+            $this->changedNodes->addNode($changedNode);
+        }
+    }
+
+  
     /**
      * Remove return types from function or method.
      *
@@ -20,7 +37,7 @@ class ReturnType
      * @param PhpParser\Node\Stmt $node (Function_ or ClassMethod)
      * @return Bouda\Php7Backport\ChangedNode
      */
-    public static function transform(Stmt $node)
+    private function transform(Stmt $node)
     {
         $node->returnType = null;
         $node->setAttribute('changed', true);
@@ -33,7 +50,7 @@ class ReturnType
      * Find end position of function header declaration in original code 
      * and set to node attribute.
      */
-    public static function setOriginalEndOfHeaderPosition(Stmt $node, array $tokens)
+    private function setOriginalEndOfHeaderPosition(Stmt $node, array $tokens)
     {
         $currentTokenPosition = $node->getAttribute('startTokenPos');
 

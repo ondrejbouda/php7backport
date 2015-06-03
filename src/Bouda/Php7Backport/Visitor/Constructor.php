@@ -1,13 +1,37 @@
 <?php
 
-namespace Bouda\Php7Backport\Transformation;
+namespace Bouda\Php7Backport\Visitor;
 
-use PhpParser\Node\Stmt\ClassMethod;
+use Bouda\Php7Backport;
 use Bouda\Php7Backport\ChangedNode;
 
+use PhpParser\Node;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\ClassMethod;
 
-class Constructor
+
+class Constructor extends Php7Backport\Visitor
 {
+    public function leaveNode(Node $node)
+    {
+        if ($node instanceof Class_)
+        {
+            $className = $node->name;
+
+            foreach ($node->stmts as $stmt)
+            {
+                if ($stmt instanceof ClassMethod && $stmt->name == $className)
+                {
+                    $changedNode = $this->transform($stmt);
+                    $this->setOriginalEndOfHeaderPosition($stmt, $this->tokens);
+
+                    $this->changedNodes->addNode($changedNode);
+                }
+            }
+        }
+    }
+
+
     /**
      * Rename PHP4-style constructor to __construct.
      *
@@ -19,7 +43,7 @@ class Constructor
      * @param PhpParser\Node\Stmt\ClassMethod $node (ClassMethod)
      * @return Bouda\Php7Backport\ChangedNode
      */
-    public static function transform(ClassMethod $node)
+    private function transform(ClassMethod $node)
     {
         $node->name = '__construct';
         $node->setAttribute('changed', true);
@@ -32,7 +56,7 @@ class Constructor
      * Find end position of function header declaration in original code 
      * and set to node attribute.
      */
-    public static function setOriginalEndOfHeaderPosition(ClassMethod $node, array $tokens)
+    private function setOriginalEndOfHeaderPosition(ClassMethod $node, array $tokens)
     {
         $currentTokenPosition = $node->getAttribute('startTokenPos');
 

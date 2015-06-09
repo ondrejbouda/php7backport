@@ -20,7 +20,20 @@ use PhpParser\Node\Expr\BinaryOp\BooleanAnd;
 use PhpParser\Node\Expr\BinaryOp\Coalesce as CoalesceNode;
 
 
-
+/**
+ * Transform null coalesce operator expression into ternary isset/isnull expression. 
+ * Isset is used for variables, isnull for expressions.
+ *
+ * Examples: 
+ * 
+ * $foo ?? $bar
+ * becomes
+ * isset($foo) ? $foo : $bar 
+ *  
+ * 42 ?? $bar
+ * becomes
+ * !is_null(42) ? 42 : $bar
+ */
 class Coalesce extends Php7Backport\Visitor
 {
     public function leaveNode(Node $node)
@@ -33,23 +46,6 @@ class Coalesce extends Php7Backport\Visitor
     }
 
 
-    /**
-     * Transform null coalesce operator expression into ternary isset/isnull expression. 
-     * Isset is used for variables, isnull for expressions.
-     *
-     * Examples: 
-     * 
-     * $foo ?? $bar
-     * becomes
-     * isset($foo) ? $foo : $bar 
-     *  
-     * 42 ?? $bar
-     * becomes
-     * !is_null(42) ? 42 : $bar
-     *
-     * @param PhpParser\Node\Expr\BinaryOp\Coalesce $node
-     * @return Bouda\Php7Backport\ChangedNode
-     */
     private function transform(CoalesceNode $node)
     {
         // if left node is variable (can be used as an isset argument)

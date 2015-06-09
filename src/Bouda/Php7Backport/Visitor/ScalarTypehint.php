@@ -9,6 +9,14 @@ use PhpParser\Node;
 use PhpParser\Node\Param;
 
 
+/**
+ * Remove scalar typehint from function or method parameter.
+ *
+ * Example: 
+ * function foo(string $x, SomeClass $y) {...
+ * becomes
+ * function foo($x, SomeClass $y) {...
+ */
 class ScalarTypehint extends Php7Backport\Visitor
 {
     public function leaveNode(Node $node)
@@ -24,17 +32,6 @@ class ScalarTypehint extends Php7Backport\Visitor
     }
 
 
-    /**
-     * Remove scalar typehint from function or method parameter.
-     *
-     * Example: 
-     * function foo(string $x, SomeClass $y) {...
-     * becomes
-     * function foo($x, SomeClass $y) {...
-     *
-     * @param PhpParser\Node\Param $node
-     * @return Bouda\Php7Backport\ChangedNode
-     */
     private function transform(Param $node)
     {
         $node->type = null;

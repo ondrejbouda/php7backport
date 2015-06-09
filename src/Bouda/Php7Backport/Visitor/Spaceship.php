@@ -13,6 +13,14 @@ use PhpParser\Node\Expr\BinaryOp\Spaceship as SpaceshipNode;
 use PhpParser\Node\Scalar\LNumber;
 
 
+/**
+ * Transform spaceship operator expression into ternary-greater-smaller expression.
+ *
+ * Example: 
+ * $foo <=> $bar
+ * becomes
+ * $foo > $bar ? 1 : ($foo < $bar ? -1 : 0)
+ */
 class Spaceship extends Php7Backport\Visitor
 {
     public function leaveNode(Node $node)
@@ -26,17 +34,6 @@ class Spaceship extends Php7Backport\Visitor
     }
 
 
-    /**
-     * Transform spaceship operator expression into ternary-greater-smaller expression.
-     *
-     * Example: 
-     * $foo <=> $bar
-     * becomes
-     * $foo > $bar ? 1 : ($foo < $bar ? -1 : 0)
-     *
-     * @param PhpParser\Node\Expr\BinaryOp\Spaceship $node
-     * @return Bouda\Php7Backport\ChangedNode
-     */
     private function transform(SpaceshipNode $node)
     {
         return new ChangedNode(new Ternary(

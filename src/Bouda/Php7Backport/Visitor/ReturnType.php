@@ -11,6 +11,14 @@ use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\ClassMethod;
 
 
+/**
+ * Remove return types from function or method.
+ *
+ * Example: 
+ * function foo() : string {...
+ * becomes
+ * function foo() {...
+ */
 class ReturnType extends Php7Backport\Visitor
 {
     public function leaveNode(Node $node)
@@ -25,18 +33,7 @@ class ReturnType extends Php7Backport\Visitor
         }
     }
 
-  
-    /**
-     * Remove return types from function or method.
-     *
-     * Example: 
-     * function foo() : string {...
-     * becomes
-     * function foo() {...
-     *
-     * @param PhpParser\Node\Stmt $node (Function_ or ClassMethod)
-     * @return Bouda\Php7Backport\ChangedNode
-     */
+
     private function transform(Stmt $node)
     {
         $node->returnType = null;

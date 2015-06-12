@@ -12,22 +12,40 @@ class Tokens
     {
         $this->tokens = $tokens;
 
-        $this->resetPosition();
+        $this->reset();
     }
 
 
-    public function resetPosition()
+    public function reset()
     {
         reset($this->tokens);
     }
 
 
-    public function gotoPosition($position)
+    public function goto($position)
     {
         while (key($this->tokens) !== $position) 
         {
             next($this->tokens);
         }
+    }
+
+
+    public function current()
+    {
+        return current($this->tokens);
+    }
+
+
+    public function next()
+    {
+        return next($this->tokens);
+    }
+
+
+    public function prev()
+    {
+        return prev($this->tokens);
     }
 
 
@@ -39,7 +57,7 @@ class Tokens
         {
             $offset += $this->getCurrentTokenLength();
 
-            next($this->tokens);
+            $this->next();
         }
 
         return $offset;
@@ -48,7 +66,7 @@ class Tokens
 
     public function goBackIfToken($token)
     {
-        prev($this->tokens);
+        $this->prev();
 
         if ($this->isCurrentTokenEqual($token))
         {
@@ -57,14 +75,14 @@ class Tokens
         else
         {
             // return to original position
-            next($this->tokens);
+            $this->next();
         }
     }
 
 
     private function getCurrentTokenLength()
     {
-        $token = current($this->tokens);
+        $token = $this->current();
 
         return is_array($token) ? strlen($token[1]) : strlen($token);
     }
@@ -72,7 +90,7 @@ class Tokens
 
     private function isCurrentTokenEqual($value)
     {
-        $token = current($this->tokens);
+        $token = $this->current();
 
         if (is_numeric($value))
         {

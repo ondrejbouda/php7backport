@@ -81,11 +81,11 @@ class ChangedNodes
      */
     public function setOriginalEndOfFunctionHeaderPosition(ChangedNode $changedNode)
     {
-        $this->tokens->resetPosition();
+        $this->tokens->reset();
 
         $node = $changedNode->getNode();
 
-        $this->tokens->gotoPosition($node->getAttribute('startTokenPos'));
+        $this->tokens->goto($node->getAttribute('startTokenPos'));
 
         $offset = 0;
         // find the beginning of body of function

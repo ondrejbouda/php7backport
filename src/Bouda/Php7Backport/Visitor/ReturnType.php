@@ -27,9 +27,10 @@ class ReturnType extends Php7Backport\Visitor
             && isset($node->returnType))
         {
             $changedNode = $this->transform($node);
-            $this->setOriginalEndOfFunctionHeaderPosition($node);
 
             $this->changedNodes->addNode($changedNode);
+
+            $this->changedNodes->setOriginalEndOfFunctionHeaderPosition($changedNode);
         }
     }
 

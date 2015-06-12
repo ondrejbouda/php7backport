@@ -31,9 +31,10 @@ class Constructor extends Php7Backport\Visitor
                 if ($stmt instanceof ClassMethod && $stmt->name == $className)
                 {
                     $changedNode = $this->transform($stmt);
-                    $this->setOriginalEndOfFunctionHeaderPosition($stmt);
 
                     $this->changedNodes->addNode($changedNode);
+
+                    $this->changedNodes->setOriginalEndOfFunctionHeaderPosition($changedNode);
                 }
             }
         }

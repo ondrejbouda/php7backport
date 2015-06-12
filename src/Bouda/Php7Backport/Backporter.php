@@ -53,13 +53,13 @@ class Backporter
 
         $tokens = $lexer->getTokens();
 
-        $changedNodes = new ChangedNodes;
+        $changedNodes = new ChangedNodes($tokens);
 
-        $traverser->addVisitor(new Visitor\Coalesce($tokens, $changedNodes));
-        $traverser->addVisitor(new Visitor\Constructor($tokens, $changedNodes));
-        $traverser->addVisitor(new Visitor\ReturnType($tokens, $changedNodes));
-        $traverser->addVisitor(new Visitor\ScalarTypehint($tokens, $changedNodes));
-        $traverser->addVisitor(new Visitor\Spaceship($tokens, $changedNodes));
+        $traverser->addVisitor(new Visitor\Coalesce($changedNodes));
+        $traverser->addVisitor(new Visitor\Constructor($changedNodes));
+        $traverser->addVisitor(new Visitor\ReturnType($changedNodes));
+        $traverser->addVisitor(new Visitor\ScalarTypehint($changedNodes));
+        $traverser->addVisitor(new Visitor\Spaceship($changedNodes));
 
         $portedStatements = $traverser->traverse($parsedStatements);
 

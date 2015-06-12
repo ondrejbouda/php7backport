@@ -51,7 +51,7 @@ class Backporter
 
         $parsedStatements = $parser->parse($code);
 
-        $tokens = $lexer->getTokens();
+        $tokens = new Tokens($lexer->getTokens());
 
         $changedNodes = new ChangedNodes($tokens);
 

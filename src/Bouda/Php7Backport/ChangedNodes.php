@@ -12,7 +12,7 @@ class ChangedNodes
     private $changedNodes = [];
 
 
-    public function __construct(array $tokens)
+    public function __construct(Tokens $tokens)
     {
         $this->tokens = $tokens;
     }
@@ -87,66 +87,15 @@ class ChangedNodes
 
         $offset = 0;
         // find the beginning of body of function
-        $offset += $this->findNextToken($currentTokenPosition, '{');
+        $offset += $this->tokens->findNextToken($currentTokenPosition, '{');
         // leave last whitespace before (if present)
-        $offset -= $this->goBackIfToken($currentTokenPosition, T_WHITESPACE);
+        $offset -= $this->tokens->goBackIfToken($currentTokenPosition, T_WHITESPACE);
 
-        $endFilePos =  $node->getAttribute('startFilePos') + $offset;
+        $endFilePos = $node->getAttribute('startFilePos') + $offset;
 
         // lower by 1 to stay consistent with original (wrong) values by parser
         $endFilePos -= 1;
 
         $node->setAttribute('endFilePos', $endFilePos);
-    }
-
-
-    private function findNextToken(&$currentPosition, $token)
-    {
-        $offset = 0;
-
-        $currentToken = $this->tokens[$currentPosition];
-
-        while (!$this->isTokenEqual($currentToken, $token))
-        {
-            $offset += $this->getTokenLength($currentToken);
-            
-            $currentPosition++;
-
-            $currentToken = $this->tokens[$currentPosition];
-        }
-        
-
-        return $offset;
-    }
-
-
-    private function goBackIfToken(&$currentPosition, $token)
-    {
-        $currentPosition--;
-        $currentToken = $this->tokens[$currentPosition];
-        
-        if ($this->isTokenEqual($currentToken, $token))
-        {
-            return $this->getTokenLength($currentToken);
-        }
-    }
-
-
-    private function getTokenLength($token)
-    {
-        return is_array($token) ? strlen($token[1]) : strlen($token);
-    }
-
-
-    private function isTokenEqual($token, $value)
-    {
-        if (is_numeric($value))
-        {
-            return is_array($token) && $token[0] === $value;
-        }
-        else
-        {
-            return $token === $value;
-        }
     }
 }

@@ -18,16 +18,30 @@ class Tokens
 
     public function reset()
     {
-        reset($this->tokens);
+        return reset($this->tokens);
+    }
+
+
+    public function end()
+    {
+        return end($this->tokens);
     }
 
 
     public function goto($position)
     {
-        while (key($this->tokens) !== $position) 
+        while ($this->position() !== $position) 
         {
-            next($this->tokens);
+            $this->next();
         }
+
+        return $this->current();
+    }
+
+
+    public function position()
+    {
+        return key($this->tokens);
     }
 
 
@@ -45,6 +59,12 @@ class Tokens
 
     public function prev()
     {
+        if ($this->position() === 0)
+        {
+            // do not change cursor
+            return false;
+        }
+
         return prev($this->tokens);
     }
 
@@ -100,5 +120,32 @@ class Tokens
         {
             return $token === $value;
         }
+    }
+
+
+    public function getOffsetFromCurrent($position)
+    {
+        $offset = 0;
+
+        if ($this->position() < $position)
+        {
+            while ($this->position() !== $position)
+            {
+                $offset -= $this->getCurrentTokenLength();
+
+                $this->next();
+            }
+        }
+        elseif ($this->position() > $position)
+        {
+            while ($this->position() !== $position)
+            {
+                $offset += $this->getCurrentTokenLength();
+
+                $this->prev();
+            }
+        }
+
+        return $offset;
     }
 }

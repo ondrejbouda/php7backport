@@ -84,15 +84,17 @@ class ChangedNodes
         $this->tokens->reset();
 
         $node = $changedNode->getNode();
-
-        $this->tokens->goto($node->getAttribute('startTokenPos'));
+        
+        $startPosition = $node->getAttribute('startTokenPos');
+        $this->tokens->goto($startPosition);
 
         $offset = 0;
         // find the beginning of body of function
         $offset += $this->tokens->findNextToken('{');
         // leave last whitespace before (if present)
         $offset -= $this->tokens->goBackIfToken(T_WHITESPACE);
-
+// TODO: use getOffsetFromCurrent to get offset
+// dump($offset);dump($this->tokens->getOffsetFromCurrent($startPosition));
         $endFilePos = $node->getAttribute('startFilePos') + $offset;
 
         // lower by 1 to stay consistent with original (wrong) values by parser

@@ -81,15 +81,17 @@ class ChangedNodes
      */
     public function setOriginalEndOfFunctionHeaderPosition(ChangedNode $changedNode)
     {
+        $this->tokens->resetPosition();
+
         $node = $changedNode->getNode();
 
-        $currentTokenPosition = $node->getAttribute('startTokenPos');
+        $this->tokens->gotoPosition($node->getAttribute('startTokenPos'));
 
         $offset = 0;
         // find the beginning of body of function
-        $offset += $this->tokens->findNextToken($currentTokenPosition, '{');
+        $offset += $this->tokens->findNextToken('{');
         // leave last whitespace before (if present)
-        $offset -= $this->tokens->goBackIfToken($currentTokenPosition, T_WHITESPACE);
+        $offset -= $this->tokens->goBackIfToken(T_WHITESPACE);
 
         $endFilePos = $node->getAttribute('startFilePos') + $offset;
 

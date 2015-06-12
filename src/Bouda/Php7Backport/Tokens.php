@@ -11,49 +11,69 @@ class Tokens
     public function __construct (array $tokens)
     {
         $this->tokens = $tokens;
+
+        $this->resetPosition();
     }
 
 
-    public function findNextToken(&$currentPosition, $token)
+    public function resetPosition()
+    {
+        reset($this->tokens);
+    }
+
+
+    public function gotoPosition($position)
+    {
+        while (key($this->tokens) !== $position) 
+        {
+            next($this->tokens);
+        }
+    }
+
+
+    public function findNextToken($token)
     {
         $offset = 0;
 
-        $currentToken = $this->tokens[$currentPosition];
-
-        while (!$this->isTokenEqual($currentToken, $token))
+        while (!$this->isCurrentTokenEqual($token))
         {
-            $offset += $this->getTokenLength($currentToken);
-            
-            $currentPosition++;
+            $offset += $this->getCurrentTokenLength();
 
-            $currentToken = $this->tokens[$currentPosition];
+            next($this->tokens);
         }
-        
 
         return $offset;
     }
 
 
-    public function goBackIfToken(&$currentPosition, $token)
+    public function goBackIfToken($token)
     {
-        $currentPosition--;
-        $currentToken = $this->tokens[$currentPosition];
-        
-        if ($this->isTokenEqual($currentToken, $token))
+        prev($this->tokens);
+
+        if ($this->isCurrentTokenEqual($token))
         {
-            return $this->getTokenLength($currentToken);
+            return $this->getCurrentTokenLength();
+        }
+        else
+        {
+            // return to original position
+            next($this->tokens);
         }
     }
 
 
-    private function getTokenLength($token)
+    private function getCurrentTokenLength()
     {
+        $token = current($this->tokens);
+
         return is_array($token) ? strlen($token[1]) : strlen($token);
     }
 
 
-    private function isTokenEqual($token, $value)
+    private function isCurrentTokenEqual($value)
     {
+        $token = current($this->tokens);
+
         if (is_numeric($value))
         {
             return is_array($token) && $token[0] === $value;

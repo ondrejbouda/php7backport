@@ -7,6 +7,8 @@ class Tokens
 {
     private $tokens;
 
+    private $savedPosition;
+
 
     public function __construct (array $tokens)
     {
@@ -71,21 +73,20 @@ class Tokens
 
     public function findNextToken($token)
     {
-        $offset = 0;
-
         while (!$this->isCurrentTokenEqual($token))
         {
-            $offset += $this->getCurrentTokenLength();
-
-            $this->next();
+            if (!$this->next())
+            {
+                throw new Exception("Token '" . $token . "' could not be found.");
+            }
         }
-
-        return $offset;
     }
 
 
-    public function goBackIfToken($token)
+    public function prevIfToken($token)
     {
+        $this->savePosition();
+
         $this->prev();
 
         if ($this->isCurrentTokenEqual($token))
@@ -94,16 +95,19 @@ class Tokens
         }
         else
         {
-            // return to original position
-            $this->next();
+            $this->restorePosition();
         }
     }
 
 
     private function getCurrentTokenLength()
     {
-        $token = $this->current();
+        return $this->getTokenLength($this->current());
+    }
 
+
+    private function getTokenLength($token)
+    {
         return is_array($token) ? strlen($token[1]) : strlen($token);
     }
 
@@ -123,29 +127,34 @@ class Tokens
     }
 
 
-    public function getOffsetFromCurrent($position)
+    public function getStringLengthBetweenPositions($position1, $position2)
     {
-        $offset = 0;
-
-        if ($this->position() < $position)
+        if ($position1 > $position2)
         {
-            while ($this->position() !== $position)
-            {
-                $offset -= $this->getCurrentTokenLength();
-
-                $this->next();
-            }
-        }
-        elseif ($this->position() > $position)
-        {
-            while ($this->position() !== $position)
-            {
-                $offset += $this->getCurrentTokenLength();
-
-                $this->prev();
-            }
+            throw new Exception("Second position must be greater than first.");
         }
 
-        return $offset;
+        $length = 0;
+
+        $tokensPart = array_slice($this->tokens, $position1, $position2 - $position1 + 1, true);
+
+        foreach ($tokensPart as $token)
+        {
+            $length += $this->getTokenLength($token);
+        }
+
+        return $length;
+    }
+
+
+    private function savePosition()
+    {
+        $this->savedPosition = $this->position();
+    }
+
+
+    private function restorePosition()
+    {
+        $this->goto($this->savedPosition);
     }
 }

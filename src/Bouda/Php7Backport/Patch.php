@@ -14,9 +14,6 @@ class Patch
     /** @var Bouda\Php7Backport\Tokens */
     private $tokens;
 
-    /** @var PhpParser\Node */
-    private $node;
-
     /** @var int */
     private $startPosition;
     /** @var int */
@@ -37,8 +34,6 @@ class Patch
     {
         $this->tokens = $tokens;
 
-        $this->node = $node;
-
         $this->startPosition = $node->getAttribute('startFilePos');
         $this->originalEndPosition = $node->getAttribute('endFilePos');
 
@@ -46,17 +41,6 @@ class Patch
 
         // render patch
         $this->patch = $printer->printNode($node);
-    }
-
-
-    /**
-     * Get the (transformed) node. 
-     *  
-     * @return PhpParser\Node
-     */
-    public function getNode()
-    {
-        return $this->node;
     }
 
 

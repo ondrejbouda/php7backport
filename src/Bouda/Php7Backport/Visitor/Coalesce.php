@@ -40,10 +40,11 @@ class Coalesce extends Php7Backport\Visitor
     {
         if ($node instanceof CoalesceNode)
         {
-            $patch = $this->transform($node);
+            $node = $this->transform($node);
+            $patch = $this->patchFactory->create($node);
             $this->patches->add($patch);
 
-            return $patch->getNode();
+            return $node;
         }
     }
 
@@ -79,6 +80,6 @@ class Coalesce extends Php7Backport\Visitor
             $node->getAttributes() + ['changed' => true]
         );
 
-        return $this->patchFactory->create($node);
+        return $node;
     }
 }

@@ -31,11 +31,12 @@ class Constructor extends Php7Backport\Visitor
             {
                 if ($stmt instanceof ClassMethod && $stmt->name == $className)
                 {
-                    $patch = $this->transform($stmt);
+                    $node = $this->transform($stmt);
+                    $patch = $this->patchFactory->create($node, new FunctionHeaderPrinter);
                     $patch->setOriginalEndOfFunctionHeaderPosition();
                     $this->patches->add($patch);
 
-                    return $patch->getNode();
+                    return $node;
                 }
             }
         }
@@ -47,6 +48,6 @@ class Constructor extends Php7Backport\Visitor
         $node->name = '__construct';
         $node->setAttribute('changed', true);
 
-        return $this->patchFactory->create($node, new FunctionHeaderPrinter);
+        return $node;
     }
 }

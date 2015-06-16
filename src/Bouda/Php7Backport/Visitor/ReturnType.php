@@ -4,6 +4,7 @@ namespace Bouda\Php7Backport\Visitor;
 
 use Bouda\Php7Backport;
 use Bouda\Php7Backport\Patch;
+use Bouda\Php7Backport\Printer\FunctionHeaderPrinter;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt;
@@ -40,6 +41,6 @@ class ReturnType extends Php7Backport\Visitor
         $node->returnType = null;
         $node->setAttribute('changed', true);
 
-        return $this->patchFactory->create($node);
+        return $this->patchFactory->create($node, new FunctionHeaderPrinter);
     }
 }

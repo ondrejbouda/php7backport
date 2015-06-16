@@ -86,7 +86,7 @@ function foo(string $x,   SomeClass $y) : int
 function foo($x, SomeClass $y)
 {
     // comment
-    return isset($foo) ? $foo : $one > $two ? 1 : ($one < $two ? -1 : 0);
+    return isset($foo) ? $foo : ($one > $two ? 1 : ($one < $two ? -1 : 0));
 }
 
 ';

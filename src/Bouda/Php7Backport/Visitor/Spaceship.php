@@ -3,7 +3,7 @@
 namespace Bouda\Php7Backport\Visitor;
 
 use Bouda\Php7Backport;
-use Bouda\Php7Backport\ChangedNode;
+use Bouda\Php7Backport\Patch;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr\Ternary;
@@ -27,16 +27,17 @@ class Spaceship extends Php7Backport\Visitor
     {
         if ($node instanceof SpaceshipNode)
         {
-            $changedNode = $this->transform($node);
+            $patch = $this->transform($node);
+            $this->patches->add($patch);
 
-            $this->changedNodes->addNode($changedNode);
+            return $patch->getNode();
         }
     }
 
 
     private function transform(SpaceshipNode $node)
     {
-        return new ChangedNode(new Ternary(
+        $node = new Ternary(
             new Greater(
                 $node->left,
                 $node->right
@@ -51,6 +52,8 @@ class Spaceship extends Php7Backport\Visitor
                 new LNumber(0)
             ),
             $node->getAttributes() + ['changed' => true]
-        ));
+        );
+
+        return $this->patchFactory->create($node);
     }
 }

@@ -4,17 +4,18 @@ namespace Bouda\Php7Backport;
 
 use PhpParser;
 use PhpParser\Node;
+use Bouda\Php7Backport\Printer\DefaultPrinter;
 
 
 class Backporter
 {
-    /** @var PhpParser\PrettyPrinterAbstract */
-    private $printer;
+    /** @var Bouda\Php7Backport\Printer */
+    private $defaultPrinter;
 
 
     public function __construct()
     {
-        $this->printer = new Printer;
+        $this->defaultPrinter = new DefaultPrinter;
     }
 
 
@@ -29,54 +30,44 @@ class Backporter
     {
         $lexer = new PhpParser\Lexer\Emulative(array(
             'usedAttributes' => array(
-                'comments',
-                'startLine',
-                'endLine',
                 'startFilePos',
                 'endFilePos',
                 'startTokenPos',
-                'endTokenPos'
             )
         ));
 
         $parser = new PhpParser\Parser($lexer);
 
         $traverser = new PhpParser\NodeTraverser;
-        
-        // add starting <?php tag if necessary
-        if (strpos($code, '<?') === false)
-        {
-            $code = '<?php ' . $code;
-        }
 
         $parsedStatements = $parser->parse($code);
 
         $tokens = new Tokens($lexer->getTokens());
 
-        $changedNodes = new ChangedNodes($tokens);
+        $patchFactory = new PatchFactory($tokens, $this->defaultPrinter);
+        $patches = new PatchCollection();
 
-        $traverser->addVisitor(new Visitor\Coalesce($changedNodes));
-        $traverser->addVisitor(new Visitor\Constructor($changedNodes));
-        $traverser->addVisitor(new Visitor\ReturnType($changedNodes));
-        $traverser->addVisitor(new Visitor\ScalarTypehint($changedNodes));
-        $traverser->addVisitor(new Visitor\Spaceship($changedNodes));
+        $traverser->addVisitor(new Visitor\Coalesce($patchFactory, $patches));
+        $traverser->addVisitor(new Visitor\Constructor($patchFactory, $patches));
+        $traverser->addVisitor(new Visitor\ReturnType($patchFactory, $patches));
+        $traverser->addVisitor(new Visitor\ScalarTypehint($patchFactory, $patches));
+        $traverser->addVisitor(new Visitor\Spaceship($patchFactory, $patches));
 
-        $portedStatements = $traverser->traverse($parsedStatements);
+        $traverser->traverse($parsedStatements);
 
         $offset = 0;
 
-        foreach ($changedNodes->getSortedNodes() as $changedNode)
+        foreach ($patches->getSorted() as $patch)
         {
-            $start = $changedNode->getOriginalStartPosition($offset);
-            $end = $changedNode->getOriginalEndPosition($offset);
+            $start = $patch->getStartPosition($offset);
             
-            $originalLength = $changedNode->getOriginalLength();
+            $originalLength = $patch->getOriginalLength();
             
-            $renderedNode = $this->printer->printNode($changedNode->getNode());
+            $renderedPatch = $patch->getPatch();
 
-            $newLength = strlen($renderedNode);
+            $newLength = strlen($renderedPatch);
 
-            $code = substr_replace($code, $renderedNode, $start, $originalLength);
+            $code = substr_replace($code, $renderedPatch, $start, $originalLength);
 
             $offset += $newLength - $originalLength;
         }

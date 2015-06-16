@@ -3,7 +3,7 @@
 namespace Bouda\Php7Backport\Visitor;
 
 use Bouda\Php7Backport;
-use Bouda\Php7Backport\ChangedNode;
+use Bouda\Php7Backport\Patch;
 
 use PhpParser\Node;
 use PhpParser\Node\Param;
@@ -25,9 +25,10 @@ class ScalarTypehint extends Php7Backport\Visitor
             && isset($node->type->parts[0]) 
             && in_array($node->type->parts[0], ['int', 'float', 'string', 'bool']))
         {
-            $changedNode = $this->transform($node);
+            $patch = $this->transform($node);
+            $this->patches->add($patch);
 
-            $this->changedNodes->addNode($changedNode);
+            return $patch->getNode();
         }
     }
 
@@ -37,6 +38,6 @@ class ScalarTypehint extends Php7Backport\Visitor
         $node->type = null;
         $node->setAttribute('changed', true);
 
-        return new ChangedNode($node);
+        return $this->patchFactory->create($node);
     }
 }

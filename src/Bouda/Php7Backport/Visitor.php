@@ -8,11 +8,13 @@ use PhpParser\Node\Stmt;
 
 abstract class Visitor extends PhpParser\NodeVisitorAbstract
 {
-    protected $changedNodes;
+    protected $patchFactory;
+    protected $patches;
 
 
-    public function __construct(ChangedNodes $changedNodes)
+    public function __construct(PatchFactory $patchFactory, PatchCollection $patches)
     {
-        $this->changedNodes = $changedNodes;
+        $this->patchFactory = $patchFactory;
+        $this->patches = $patches;
     }
 }

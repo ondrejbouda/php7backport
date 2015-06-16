@@ -3,7 +3,7 @@
 namespace Bouda\Php7Backport\Visitor;
 
 use Bouda\Php7Backport;
-use Bouda\Php7Backport\ChangedNode;
+use Bouda\Php7Backport\Patch;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
@@ -30,11 +30,11 @@ class Constructor extends Php7Backport\Visitor
             {
                 if ($stmt instanceof ClassMethod && $stmt->name == $className)
                 {
-                    $changedNode = $this->transform($stmt);
+                    $patch = $this->transform($stmt);
+                    $patch->setOriginalEndOfFunctionHeaderPosition();
+                    $this->patches->add($patch);
 
-                    $this->changedNodes->addNode($changedNode);
-
-                    $this->changedNodes->setOriginalEndOfFunctionHeaderPosition($changedNode);
+                    return $patch->getNode();
                 }
             }
         }
@@ -46,6 +46,6 @@ class Constructor extends Php7Backport\Visitor
         $node->name = '__construct';
         $node->setAttribute('changed', true);
 
-        return new ChangedNode($node);
+        return $this->patchFactory->create($node);
     }
 }

@@ -3,7 +3,7 @@
 namespace Bouda\Php7Backport\Visitor;
 
 use Bouda\Php7Backport;
-use Bouda\Php7Backport\ChangedNode;
+use Bouda\Php7Backport\Patch;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt;
@@ -26,11 +26,11 @@ class ReturnType extends Php7Backport\Visitor
         if (($node instanceof Function_ || $node instanceof ClassMethod)
             && isset($node->returnType))
         {
-            $changedNode = $this->transform($node);
+            $patch = $this->transform($node);
+            $patch->setOriginalEndOfFunctionHeaderPosition();
+            $this->patches->add($patch);
 
-            $this->changedNodes->addNode($changedNode);
-
-            $this->changedNodes->setOriginalEndOfFunctionHeaderPosition($changedNode);
+            return $patch->getNode();
         }
     }
 
@@ -40,6 +40,6 @@ class ReturnType extends Php7Backport\Visitor
         $node->returnType = null;
         $node->setAttribute('changed', true);
 
-        return new ChangedNode($node);
+        return $this->patchFactory->create($node);
     }
 }

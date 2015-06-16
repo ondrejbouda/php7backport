@@ -3,7 +3,7 @@
 namespace Bouda\Php7Backport\Visitor;
 
 use Bouda\Php7Backport;
-use Bouda\Php7Backport\ChangedNode;
+use Bouda\Php7Backport\Patch;
 
 use PhpParser\Node;
 use PhpParser\Node\Arg;
@@ -40,8 +40,10 @@ class Coalesce extends Php7Backport\Visitor
     {
         if ($node instanceof CoalesceNode)
         {
-            $changedNode = $this->transform($node);
-            $this->changedNodes->addNode($changedNode);
+            $patch = $this->transform($node);
+            $this->patches->add($patch);
+
+            return $patch->getNode();
         }
     }
 
@@ -70,11 +72,13 @@ class Coalesce extends Php7Backport\Visitor
             );
         }
 
-        return new ChangedNode(new Ternary(
+        $node = new Ternary(
             $condition,
             $node->left,
             $node->right,
             $node->getAttributes() + ['changed' => true]
-        ));
+        );
+
+        return $this->patchFactory->create($node);
     }
 }

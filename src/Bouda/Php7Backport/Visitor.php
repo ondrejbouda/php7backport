@@ -6,6 +6,9 @@ use PhpParser;
 use PhpParser\Node\Stmt;
 
 
+/**
+ * Abstract Visitor class with common constructor.
+ */
 abstract class Visitor extends PhpParser\NodeVisitorAbstract
 {
     protected $patchFactory;

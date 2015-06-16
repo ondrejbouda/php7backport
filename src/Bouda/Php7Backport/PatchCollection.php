@@ -5,9 +5,15 @@ namespace Bouda\Php7Backport;
 
 class PatchCollection
 {
+    /** @var array */
     private $patches;
 
 
+    /**
+     * Add a patch to collection. 
+     *  
+     * @param Bouda\Php7Backport\Patch
+     */
     public function add(Patch $patch)
     {
 
@@ -17,6 +23,11 @@ class PatchCollection
     }
 
 
+    /**
+     * Remove nested patches within this patch. 
+     *  
+     * @param Bouda\Php7Backport\Patch
+     */
     private function removeNestedPatches(Patch $patch)
     {
         $start = $patch->getStartPosition();
@@ -28,6 +39,11 @@ class PatchCollection
     }
 
 
+    /**
+     * Get all patches, sorted by position in original source file. 
+     *  
+     * @return array
+     */
     public function getSorted()
     {
         ksort($this->patches);

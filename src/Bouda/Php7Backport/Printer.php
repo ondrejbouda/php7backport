@@ -6,6 +6,9 @@ use PhpParser;
 use PhpParser\Node;
 
 
+/**
+ * Printer for printing single node.
+ */
 interface Printer
 {
     /**

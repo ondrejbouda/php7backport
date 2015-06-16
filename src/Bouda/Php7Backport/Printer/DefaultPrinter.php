@@ -38,7 +38,7 @@ implements Php7Backport\Printer
 
 
     /**
-     * Print only header of function.
+     * Print only header of method/function.
      */
     protected function printFunctionHeader(Node $node)
     {

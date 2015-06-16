@@ -31,12 +31,12 @@ class PatchTest extends TestCase
 {
     private $patch;
 
-    const T1 = 'a';
-    const T2 = 'bbb';
-    const T3 = 'c';
+    const T1 = 'aaaaa';
+    const T2 = '  ';
+    const T3 = '{';
 
     const START_FILE_POS = 0;
-    const END_FILE_POS = 0;
+    const END_FILE_POS = 3;
     const START_TOKEN_POS = 0;
 
 
@@ -72,13 +72,29 @@ class PatchTest extends TestCase
         Assert::equal(self::END_FILE_POS, $this->patch->getOriginalEndPosition());
 
         $offset = 3;
-        Assert::equal($offset, $this->patch->getOriginalEndPosition($offset));
+        Assert::equal(self::END_FILE_POS + $offset, $this->patch->getOriginalEndPosition($offset));
+    }
+
+
+    public function testGetOriginalLength()
+    {
+        Assert::equal(self::END_FILE_POS + 1 - self::START_FILE_POS, 
+            $this->patch->getOriginalLength());
     }
 
 
     public function testGetPatch()
     {
         Assert::equal(MockPrinter::OUTPUT, $this->patch->getPatch());
+    }
+
+
+    public function testSetOriginalEndOfFunctionHeaderPosition()
+    {
+        $this->patch->setOriginalEndOfFunctionHeaderPosition();
+
+         Assert::equal(self::START_FILE_POS + strlen(self::T1.self::T2) - 1, 
+            $this->patch->getOriginalEndPosition());
     }
 }
 

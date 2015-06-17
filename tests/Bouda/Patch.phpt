@@ -4,7 +4,7 @@ namespace BoudaTests;
 
 use Tester\Assert;
 use Tester\TestCase;
-use Bouda\Php7Backport\Patch;
+use Bouda\Php7Backport\Patch\FunctionHeaderPatch;
 use Bouda\Php7Backport\Tokens;
 use Bouda\Php7Backport\Printer;
 use PhpParser\Node;
@@ -54,7 +54,7 @@ class PatchTest extends TestCase
 
         $printer = new MockPrinter;
 
-        $this->patch = new Patch($tokens, $node, $printer);
+        $this->patch = new FunctionHeaderPatch($tokens, $node, $printer);
     }
 
 
@@ -69,16 +69,18 @@ class PatchTest extends TestCase
 
     public function testGetOriginalEndPosition()
     {
-        Assert::equal(self::END_FILE_POS, $this->patch->getOriginalEndPosition());
+        Assert::equal(self::START_FILE_POS + strlen(self::T1.self::T2) - 1, 
+            $this->patch->getOriginalEndPosition());
 
         $offset = 3;
-        Assert::equal(self::END_FILE_POS + $offset, $this->patch->getOriginalEndPosition($offset));
+        Assert::equal(self::START_FILE_POS + strlen(self::T1.self::T2) - 1 + $offset, 
+            $this->patch->getOriginalEndPosition($offset));
     }
 
 
     public function testGetOriginalLength()
     {
-        Assert::equal(self::END_FILE_POS + 1 - self::START_FILE_POS, 
+        Assert::equal(self::START_FILE_POS + strlen(self::T1.self::T2) - self::START_FILE_POS, 
             $this->patch->getOriginalLength());
     }
 
@@ -86,15 +88,6 @@ class PatchTest extends TestCase
     public function testGetPatch()
     {
         Assert::equal(MockPrinter::OUTPUT, $this->patch->getPatch());
-    }
-
-
-    public function testSetOriginalEndOfFunctionHeaderPosition()
-    {
-        $this->patch->setOriginalEndOfFunctionHeaderPosition();
-
-         Assert::equal(self::START_FILE_POS + strlen(self::T1.self::T2) - 1, 
-            $this->patch->getOriginalEndPosition());
     }
 }
 

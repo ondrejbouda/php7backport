@@ -28,8 +28,7 @@ class ReturnType extends Php7Backport\Visitor
             && isset($node->returnType))
         {
             $node = $this->transform($node);
-            $patch = $this->patchFactory->create($node, new FunctionHeaderPrinter);
-            $patch->setOriginalEndOfFunctionHeaderPosition();
+            $patch = $this->patchFactory->create($node);
             $this->patches->add($patch);
 
             return $node;

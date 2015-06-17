@@ -32,8 +32,7 @@ class Constructor extends Php7Backport\Visitor
                 if ($stmt instanceof ClassMethod && $stmt->name == $className)
                 {
                     $node = $this->transform($stmt);
-                    $patch = $this->patchFactory->create($node, new FunctionHeaderPrinter);
-                    $patch->setOriginalEndOfFunctionHeaderPosition();
+                    $patch = $this->patchFactory->create($node);
                     $this->patches->add($patch);
 
                     return $node;

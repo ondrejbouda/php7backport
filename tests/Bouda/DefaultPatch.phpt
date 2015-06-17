@@ -79,9 +79,9 @@ class DefaultPatchTest extends TestCase
     }
 
 
-    public function testGetPatch()
+    public function testRender()
     {
-        Assert::equal(MockPrinter::OUTPUT, $this->patch->getPatch());
+        Assert::equal(MockPrinter::OUTPUT, $this->patch->render());
     }
 }
 

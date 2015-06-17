@@ -40,9 +40,9 @@ interface Patch
 
 
     /**
-     * Get rendered patch. 
+     * Render patch. 
      *  
      * @return string
      */
-    public function getPatch();
+    public function render();
 }

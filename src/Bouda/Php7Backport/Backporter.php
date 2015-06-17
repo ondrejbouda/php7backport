@@ -63,7 +63,7 @@ class Backporter
             
             $originalLength = $patch->getOriginalLength();
             
-            $renderedPatch = $patch->getPatch();
+            $renderedPatch = $patch->render();
 
             $newLength = strlen($renderedPatch);
 

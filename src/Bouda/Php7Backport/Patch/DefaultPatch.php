@@ -15,6 +15,10 @@ class DefaultPatch implements Php7Backport\Patch
 {
     /** @var Bouda\Php7Backport\Tokens */
     protected $tokens;
+    /** @var PhpParser\Node */
+    protected $node;
+    /** @var Bouda\Php7Backport\Printer */
+    protected $printer;
 
     /** @var int */
     protected $startPosition;
@@ -35,6 +39,8 @@ class DefaultPatch implements Php7Backport\Patch
     public function __construct(Tokens $tokens, Node $node, Printer $printer)
     {
         $this->tokens = $tokens;
+        $this->node = $node;
+        $this->printer = $printer;
 
         $this->startPosition = $node->getAttribute('startFilePos');
         $this->originalEndPosition = $node->getAttribute('endFilePos');
@@ -42,9 +48,6 @@ class DefaultPatch implements Php7Backport\Patch
         $this->startTokenPosition = $node->getAttribute('startTokenPos');
 
         $this->recalculatePosition();
-
-        // render patch
-        $this->patch = $printer->printNode($node);
     }
 
 
@@ -78,9 +81,9 @@ class DefaultPatch implements Php7Backport\Patch
     /**
      * {@inheritdoc}
      */
-    public function getPatch()
+    public function render()
     {
-        return $this->patch;
+        return $this->printer->printNode($this->node);
     }
 
 

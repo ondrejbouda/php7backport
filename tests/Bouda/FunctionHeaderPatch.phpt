@@ -27,7 +27,7 @@ class MockPrinter implements Printer
 class MockNode extends NodeAbstract {}
 
 
-class PatchTest extends TestCase
+class FunctionHeaderPatchTest extends TestCase
 {
     private $patch;
 
@@ -58,15 +58,6 @@ class PatchTest extends TestCase
     }
 
 
-    public function testGetStartPosition()
-    {
-        Assert::equal(self::START_FILE_POS, $this->patch->getStartPosition());
-
-        $offset = 3;
-        Assert::equal($offset, $this->patch->getStartPosition($offset));
-    }
-
-
     public function testGetOriginalEndPosition()
     {
         Assert::equal(self::START_FILE_POS + strlen(self::T1.self::T2) - 1, 
@@ -83,14 +74,8 @@ class PatchTest extends TestCase
         Assert::equal(self::START_FILE_POS + strlen(self::T1.self::T2) - self::START_FILE_POS, 
             $this->patch->getOriginalLength());
     }
-
-
-    public function testGetPatch()
-    {
-        Assert::equal(MockPrinter::OUTPUT, $this->patch->getPatch());
-    }
 }
 
 
-$testCase = new PatchTest;
+$testCase = new FunctionHeaderPatchTest;
 $testCase->run();

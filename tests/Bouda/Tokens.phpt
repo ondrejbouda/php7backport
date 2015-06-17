@@ -48,9 +48,9 @@ class TokensTest extends TestCase
     }
 
 
-    public function testGoto()
+    public function testGotoPosition()
     {
-        $this->tokens->goto(2);
+        $this->tokens->gotoPosition(2);
         Assert::equal(self::T3, $this->tokens->current());
     }
 

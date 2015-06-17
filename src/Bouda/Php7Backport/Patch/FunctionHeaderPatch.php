@@ -31,16 +31,16 @@ class FunctionHeaderPatch extends DefaultPatch
     {
         $this->tokens->reset();
 
-        $this->tokens->goto($this->startTokenPosition);
+        $this->tokens->gotoPosition($this->getStartTokenPosition());
 
         $this->tokens->findNextToken('{');
         $this->tokens->prevIfToken(T_WHITESPACE);
         $this->tokens->prev();
 
         $offset = $this->tokens->getStringLengthBetweenPositions(
-            $this->startTokenPosition, 
+            $this->getStartTokenPosition(), 
             $this->tokens->position());
 
-        $this->originalEndPosition = $this->startPosition + $offset - 1;
+        $this->node->setAttribute('endFilePos', $this->getStartPosition() + $offset - 1);
     }
 }

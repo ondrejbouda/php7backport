@@ -30,7 +30,7 @@ class Tokens
     }
 
 
-    public function goto($position)
+    public function gotoPosition($position)
     {
         while ($this->position() !== $position) 
         {
@@ -155,6 +155,6 @@ class Tokens
 
     private function restorePosition()
     {
-        $this->goto($this->savedPosition);
+        $this->gotoPosition($this->savedPosition);
     }
 }

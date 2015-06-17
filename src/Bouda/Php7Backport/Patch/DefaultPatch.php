@@ -20,16 +20,6 @@ class DefaultPatch implements Php7Backport\Patch
     /** @var Bouda\Php7Backport\Printer */
     protected $printer;
 
-    /** @var int */
-    protected $startPosition;
-    /** @var int */
-    protected $originalEndPosition;
-    /** @var int */
-    protected $startTokenPosition;
-
-    /** @var string */
-    protected $patch;
-
 
     /**
      * @param Bouda\Php7Backport\Tokens
@@ -42,11 +32,6 @@ class DefaultPatch implements Php7Backport\Patch
         $this->node = $node;
         $this->printer = $printer;
 
-        $this->startPosition = $node->getAttribute('startFilePos');
-        $this->originalEndPosition = $node->getAttribute('endFilePos');
-
-        $this->startTokenPosition = $node->getAttribute('startTokenPos');
-
         $this->recalculatePosition();
     }
 
@@ -56,7 +41,13 @@ class DefaultPatch implements Php7Backport\Patch
      */
     public function getStartPosition($offset = 0)
     {
-        return $this->startPosition + $offset;
+        return $this->node->getAttribute('startFilePos') + $offset;
+    }
+
+
+    protected function getStartTokenPosition()
+    {
+        return $this->node->getAttribute('startTokenPos');
     }
 
 
@@ -65,7 +56,7 @@ class DefaultPatch implements Php7Backport\Patch
      */
     public function getOriginalEndPosition($offset = 0)
     {
-        return $this->originalEndPosition + $offset;
+        return $this->node->getAttribute('endFilePos') + $offset;
     }
 
 

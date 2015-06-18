@@ -44,7 +44,7 @@ class Backporter
 
         $tokens = new Tokens($lexer->getTokens());
 
-        $patchFactory = new PatchFactory($tokens, $this->defaultPrinter);
+        $patchFactory = new PatchFactory($tokens);
         $patches = new PatchCollection();
 
         $traverser->addVisitor(new Visitor\Coalesce($patchFactory, $patches));

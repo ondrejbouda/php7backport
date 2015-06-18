@@ -55,23 +55,9 @@ class Backporter
 
         $traverser->traverse($parsedStatements);
 
-        $offset = 0;
+        $patcher = new Patcher($code);
+        $patcher->apply($patches);
 
-        foreach ($patches->getSorted() as $patch)
-        {
-            $start = $patch->getStartPosition($offset);
-            
-            $originalLength = $patch->getOriginalLength();
-            
-            $renderedPatch = $patch->render();
-
-            $newLength = strlen($renderedPatch);
-
-            $code = substr_replace($code, $renderedPatch, $start, $originalLength);
-
-            $offset += $newLength - $originalLength;
-        }
-
-        return $code;
+        return $patcher->getCode();
     }
 }

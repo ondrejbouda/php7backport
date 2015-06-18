@@ -9,16 +9,6 @@ use Bouda\Php7Backport\Printer\DefaultPrinter;
 
 class Backporter
 {
-    /** @var Bouda\Php7Backport\Printer */
-    private $defaultPrinter;
-
-
-    public function __construct()
-    {
-        $this->defaultPrinter = new DefaultPrinter;
-    }
-
-
     /**
      * Backports PHP7 code to PHP5.
      *

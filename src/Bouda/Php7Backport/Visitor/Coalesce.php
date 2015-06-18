@@ -40,16 +40,12 @@ class Coalesce extends Php7Backport\Visitor
     {
         if ($node instanceof CoalesceNode)
         {
-            $node = $this->transform($node);
-            $patch = $this->patchFactory->create($node);
-            $this->patches->add($patch);
-
-            return $node;
+            return $this->tranformAndSave($node);
         }
     }
 
 
-    private function transform(CoalesceNode $node)
+    protected function transform(Node $node)
     {
         // if left node is variable (can be used as an isset argument)
         if ($node->left instanceof Variable

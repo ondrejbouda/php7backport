@@ -27,16 +27,12 @@ class ReturnType extends Php7Backport\Visitor
         if (($node instanceof Function_ || $node instanceof ClassMethod)
             && isset($node->returnType))
         {
-            $node = $this->transform($node);
-            $patch = $this->patchFactory->create($node);
-            $this->patches->add($patch);
-
-            return $node;
+            return $this->tranformAndSave($node);
         }
     }
 
 
-    private function transform(Stmt $node)
+    protected function transform(Node $node)
     {
         $node->returnType = null;
         $node->setAttribute('changed', true);

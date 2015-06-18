@@ -25,16 +25,12 @@ class ScalarTypehint extends Php7Backport\Visitor
             && isset($node->type->parts[0]) 
             && in_array($node->type->parts[0], ['int', 'float', 'string', 'bool']))
         {
-            $node = $this->transform($node);
-            $patch = $this->patchFactory->create($node);
-            $this->patches->add($patch);
-
-            return $node;
+            return $this->tranformAndSave($node);
         }
     }
 
 
-    private function transform(Param $node)
+    protected function transform(Node $node)
     {
         $node->type = null;
         $node->setAttribute('changed', true);

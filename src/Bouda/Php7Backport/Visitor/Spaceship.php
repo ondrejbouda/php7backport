@@ -27,16 +27,12 @@ class Spaceship extends Php7Backport\Visitor
     {
         if ($node instanceof SpaceshipNode)
         {
-           $node = $this->transform($node);
-           $patch = $this->patchFactory->create($node);
-           $this->patches->add($patch);
-
-           return $node;
+            return $this->tranformAndSave($node);
         }
     }
 
 
-    private function transform(SpaceshipNode $node)
+    protected function transform(Node $node)
     {
         $node = new Ternary(
             new Greater(

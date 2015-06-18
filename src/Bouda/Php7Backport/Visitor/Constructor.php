@@ -31,18 +31,14 @@ class Constructor extends Php7Backport\Visitor
             {
                 if ($stmt instanceof ClassMethod && $stmt->name == $className)
                 {
-                    $node = $this->transform($stmt);
-                    $patch = $this->patchFactory->create($node);
-                    $this->patches->add($patch);
-
-                    return $node;
+                    return $this->tranformAndSave($stmt);
                 }
             }
         }
     }
 
 
-    private function transform(ClassMethod $node)
+    protected function transform(Node $node)
     {
         $node->name = '__construct';
         $node->setAttribute('changed', true);

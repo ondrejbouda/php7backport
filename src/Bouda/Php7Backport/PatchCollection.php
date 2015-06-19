@@ -6,7 +6,7 @@ namespace Bouda\Php7Backport;
 class PatchCollection
 {
     /** @var array */
-    private $patches;
+    private $patches = [];
 
 
     /**

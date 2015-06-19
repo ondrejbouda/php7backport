@@ -5,12 +5,11 @@ namespace BoudaTests;
 use Tester\Assert;
 use Tester\TestCase;
 use Bouda\Php7Backport\Backporter;
-use PhpParser;
 
-require_once __DIR__ . '/../bootstrap.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
 
-class BackporterTest extends TestCase
+class ConstructorTest extends TestCase
 {
     private $backporter;
 
@@ -21,24 +20,22 @@ class BackporterTest extends TestCase
     }
 
 
-    public function testComplexCode()
+    public function testConstructor()
     {
         $code = '<?php 
 
-function foo(string $x,   SomeClass $y) : int
+class Foo
 {
-    // comment
-    return $foo ?? $one <=> $two;
+    function Foo($bar) {}
 }
 
 ';
 
         $expected = '<?php 
 
-function foo($x, SomeClass $y)
+class Foo
 {
-    // comment
-    return isset($foo) ? $foo : ($one > $two ? 1 : ($one < $two ? -1 : 0));
+    function __construct($bar) {}
 }
 
 ';
@@ -47,5 +44,5 @@ function foo($x, SomeClass $y)
 }
 
 
-$testCase = new BackporterTest;
+$testCase = new ConstructorTest;
 $testCase->run();

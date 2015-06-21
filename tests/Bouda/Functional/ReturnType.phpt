@@ -20,7 +20,7 @@ class ReturnTypeTest extends TestCase
     }
 
 
-    public function testReturnType()
+    public function testFunctionReturnType()
     {
         $code = '<?php function foo() : SomeClass {}';
         $expected = '<?php function foo() {}';

@@ -16,7 +16,7 @@ extends DefaultPrinter
 {
     public function pStmt_ClassMethod(Stmt\ClassMethod $node)
     {
-        return $this->printFunctionHeader($node);
+        return $this->pModifiers($node->type) . $this->printFunctionHeader($node);
     }
 
 

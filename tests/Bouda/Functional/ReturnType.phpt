@@ -26,6 +26,13 @@ class ReturnTypeTest extends TestCase
         $expected = '<?php function foo() {}';
         Assert::equal($expected, $this->backporter->port($code));
     }
+
+    public function testMethodReturnType()
+    {
+        $code = '<?php class Foo { public function bar() : SomeClass {} }';
+        $expected = '<?php class Foo { public function bar() {} }';
+        Assert::equal($expected, $this->backporter->port($code));
+    }
 }
 
 

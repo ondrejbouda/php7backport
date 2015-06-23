@@ -16,7 +16,6 @@ class PatchCollection
      */
     public function add(Patch $patch)
     {
-
         $this->patches[$patch->getStartPosition()] = $patch;
 
         $this->removeNestedPatches($patch);

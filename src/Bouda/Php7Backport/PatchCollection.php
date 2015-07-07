@@ -6,10 +6,7 @@ namespace Bouda\Php7Backport;
 class PatchCollection
 {
     /** @var array */
-    private $replacePatches = [];
-
-    /** @var array */
-    private $appendPatches = [];
+    private $patches = [];
 
 
     /**
@@ -19,20 +16,9 @@ class PatchCollection
      */
     public function add(Patch $patch)
     {
-        $this->replacePatches[$patch->getStartPosition()] = $patch;
+        $this->patches[$patch->getStartPosition()] = $patch;
 
         $this->removeNestedPatches($patch);
-    }
-
-
-    /**
-     * Add a patch to be appended at the end of file. 
-     *  
-     * @param Bouda\Php7Backport\Patch
-     */
-    public function append(Patch $patch)
-    {
-        $this->appendPatches[] = $patch;
     }
 
 
@@ -46,14 +32,9 @@ class PatchCollection
         $start = $patch->getStartPosition();
         $end = $patch->getOriginalEndPosition();
 
-        if ($start == $end)
-        {
-            return;
-        }
-
         // delete all patches starting between the start and end of this patch
         $keysToDelete = array_flip(range($start + 1, $end));
-        $this->replacePatches = array_diff_key($this->replacePatches, $keysToDelete);
+        $this->patches = array_diff_key($this->patches, $keysToDelete);
     }
 
 
@@ -62,21 +43,10 @@ class PatchCollection
      *  
      * @return array
      */
-    public function getReplacePatches()
+    public function getSorted()
     {
-        ksort($this->replacePatches);
+        ksort($this->patches);
 
-        return $this->replacePatches;
-    }
-
-
-    /**
-     * Get all patches to be appended at the end of file. 
-     *  
-     * @return array
-     */
-    public function getAppendPatches()
-    {
-        return $this->appendPatches;
+        return $this->patches;
     }
 }

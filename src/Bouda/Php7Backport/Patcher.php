@@ -26,10 +26,10 @@ class Patcher
      */
     public function apply(PatchCollection $patches)
     {
-        foreach ($patches->getReplacePatches() as $patch)
+        foreach ($patches->getSorted() as $patch)
         {
             $start = $patch->getStartPosition($this->offset);
-
+            
             $originalLength = $patch->getOriginalLength();
             
             $renderedPatch = $patch->render();
@@ -39,11 +39,6 @@ class Patcher
             $this->code = substr_replace($this->code, $renderedPatch, $start, $originalLength);
 
             $this->offset += $newLength - $originalLength;
-        }
-
-        foreach ($patches->getAppendPatches() as $patch)
-        {
-            $this->code .= $patch->render() . PHP_EOL;
         }
     }
 

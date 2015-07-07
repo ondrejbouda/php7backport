@@ -11,6 +11,9 @@ class PatchCollection
     /** @var array */
     private $appendPatches = [];
 
+    /** @var int */
+    private $id = 1;
+
 
     /**
      * Add a patch to collection. 
@@ -78,5 +81,16 @@ class PatchCollection
     public function getAppendPatches()
     {
         return $this->appendPatches;
+    }
+
+
+    /**
+     * Get id from sequence for generated class/function names. 
+     *  
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id++;
     }
 }

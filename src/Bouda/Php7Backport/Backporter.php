@@ -42,6 +42,7 @@ class Backporter
         $traverser->addVisitor(new Visitor\ReturnType($patchFactory, $patches));
         $traverser->addVisitor(new Visitor\ScalarTypehint($patchFactory, $patches));
         $traverser->addVisitor(new Visitor\Spaceship($patchFactory, $patches));
+        $traverser->addVisitor(new Visitor\AnonymousClass($patchFactory, $patches));
 
         $traverser->traverse($parsedStatements);
 

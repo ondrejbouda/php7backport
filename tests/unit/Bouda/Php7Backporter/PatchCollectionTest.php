@@ -51,4 +51,13 @@ class PatchCollectionTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey(0, $this->patches->getReplacePatches());
         $this->assertArrayNotHasKey(1, $this->patches->getReplacePatches());
     }
+
+
+    public function testGetId()
+    {
+        $id1 = $this->patches->getId();
+        $id2 = $this->patches->getId();
+
+        $this->assertEquals(1, $id2 - $id1);
+    }
 }

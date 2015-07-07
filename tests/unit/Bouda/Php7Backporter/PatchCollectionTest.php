@@ -30,16 +30,16 @@ class PatchCollectionTest extends PHPUnit_Framework_TestCase
     {
         $this->patches->add($this->patch0);
 
-        $this->assertArrayHasKey(0, $this->patches->getSorted());
+        $this->assertArrayHasKey(0, $this->patches->getReplacePatches());
     }
 
 
-    public function testGetSorted()
+    public function testGetReplacePatches()
     {
         $this->patches->add($this->patch5);
         $this->patches->add($this->patch0);
 
-        $this->assertEquals([0, 5], array_keys($this->patches->getSorted()));
+        $this->assertEquals([0, 5], array_keys($this->patches->getReplacePatches()));
     }
 
 
@@ -48,7 +48,7 @@ class PatchCollectionTest extends PHPUnit_Framework_TestCase
         $this->patches->add($this->patch1);
         $this->patches->add($this->patch0);
 
-        $this->assertArrayHasKey(0, $this->patches->getSorted());
-        $this->assertArrayNotHasKey(1, $this->patches->getSorted());
+        $this->assertArrayHasKey(0, $this->patches->getReplacePatches());
+        $this->assertArrayNotHasKey(1, $this->patches->getReplacePatches());
     }
 }

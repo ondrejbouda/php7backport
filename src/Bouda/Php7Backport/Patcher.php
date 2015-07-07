@@ -7,6 +7,8 @@ class Patcher
 {
     private $code;
 
+    private static $EOL;
+
     private $offset = 0;
 
 
@@ -16,6 +18,8 @@ class Patcher
     public function __construct($code)
     {
         $this->code = $code;
+
+        $this->detectEol();
     }
 
 
@@ -43,7 +47,7 @@ class Patcher
 
         foreach ($patches->getAppendPatches() as $patch)
         {
-            $this->code .= $patch->render() . PHP_EOL;
+            $this->code .= $patch->render() . self::$EOL;
         }
     }
 
@@ -54,5 +58,37 @@ class Patcher
     public function getCode()
     {
         return $this->code;
+    }
+
+
+    /**
+     * Detect most used end of line sequence.
+     */
+    private function detectEol()
+    {
+        $maxCount = 0;
+        $bestEol = PHP_EOL;
+        
+        foreach([
+            "\n",
+            "\r",
+            "\n\r",
+            "\r\n",
+        ] as $eol)
+        {
+            if (($count = substr_count($this->code, $eol)) >= $maxCount)
+            {
+                $maxCount = $count;
+                $bestEol = $eol;
+            }
+        }
+
+        self::$EOL = $bestEol;
+    }
+
+
+    public function getEol()
+    {
+        return self::$EOL;
     }
 }

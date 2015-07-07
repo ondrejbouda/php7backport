@@ -36,7 +36,8 @@ class AnonymousClass_1
     {
         echo $msg;
     }
-}' . PHP_EOL;
+}
+';
         $this->assertEquals($expected, $this->backporter->port($code));
     }
 }

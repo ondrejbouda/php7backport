@@ -33,4 +33,14 @@ class PatcherTest extends PHPUnit_Framework_TestCase
         
         $this->assertEquals('ABC3456789', $this->patcher->getCode());
     }
+
+
+    public function testGetEol()
+    {
+        $patcher = new Patcher("\n \n \r");
+        $this->assertEquals("\n", $patcher->getEol());
+
+        $patcher = new Patcher("\r\n \r\n");
+        $this->assertEquals("\r\n", $patcher->getEol());
+    }
 }

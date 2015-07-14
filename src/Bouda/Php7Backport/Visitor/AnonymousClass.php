@@ -54,7 +54,7 @@ class AnonymousClass extends Php7Backport\Visitor
             && $node->value->class instanceof Class_
             && $node->value->class->name === null)
         {
-            $this->newClassName = 'AnonymousClass_' . $this->patches->getId();
+            $this->newClassName = 'AnonymousClass_' . $this->patches->getNextId();
 
             $this->createAndAddClassDeclaration($node->value->class);
 

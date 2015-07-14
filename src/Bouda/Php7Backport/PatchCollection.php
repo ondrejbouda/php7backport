@@ -89,7 +89,7 @@ class PatchCollection
      *  
      * @return int
      */
-    public function getId()
+    public function getNextId()
     {
         return $this->id++;
     }

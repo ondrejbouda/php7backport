@@ -44,6 +44,7 @@ use PhpParser\Node\Stmt\Class_;
  */
 class AnonymousClass extends Php7Backport\Visitor
 {
+    /** @var string */
     private $newClassName;
 
 

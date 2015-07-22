@@ -13,7 +13,10 @@ use PhpParser\Node;
  */
 abstract class Visitor extends PhpParser\NodeVisitorAbstract
 {
+    /** @var Bouda\Php7Backport\PatchFactory */
     protected $patchFactory;
+
+    /** @var Bouda\Php7Backport\PatchCollection */
     protected $patches;
 
 

@@ -5,8 +5,10 @@ namespace Bouda\Php7Backport;
 
 class Tokens
 {
+    /** @var array */
     private $tokens;
 
+    /** @var int */
     private $savedPosition;
 
 

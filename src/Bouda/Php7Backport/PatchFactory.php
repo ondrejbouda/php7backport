@@ -20,8 +20,10 @@ class PatchFactory
 {
     /** @var Bouda\Php7Backport\Tokens */
     private $tokens;
+
     /** @var Bouda\Php7Backport\Printer */
     private $defaultprinter;
+
     /** @var Bouda\Php7Backport\Printer */
     private $functionHeaderPrinter;
 

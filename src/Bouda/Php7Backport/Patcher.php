@@ -5,11 +5,14 @@ namespace Bouda\Php7Backport;
 
 class Patcher
 {
+    /** @var string */
     private $code;
 
-    private static $EOL;
-
+    /** @var int */
     private $offset = 0;
+
+    /** @var string */
+    private static $EOL;
 
 
     /**

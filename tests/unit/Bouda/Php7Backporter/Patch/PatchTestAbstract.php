@@ -5,7 +5,7 @@ use Bouda\Php7Backport\Printer;
 use PhpParser\NodeAbstract;
 
 
-class MockNode extends \PhpParser\NodeAbstract {}
+class MockNode extends NodeAbstract {}
 
 
 class PatchTestAbstract extends PHPUnit_Framework_TestCase

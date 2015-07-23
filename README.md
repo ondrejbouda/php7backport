@@ -3,7 +3,12 @@ tool for backporting PHP7 scripts to PHP5
 
 [![Build Status](https://travis-ci.org/ondrejbouda/php7backport.svg?branch=master)](https://travis-ci.org/ondrejbouda/php7backport)
 
-## What is it?
+* [What is it for?](#what-is-it-for)
+* [Usage](#usage)
+* [Transformations](#transformations)
+* [What is missing?](#what-is-missing)
+
+## What is it for?
 
 It is a tool for backporting PHP 7 code into PHP 5. It works by parsing the source script (with nikic/php-parser) and transforming the new PHP 7 features into equivalent expressions using PHP 5 syntax. The transformed parts are patched into the original code, so as to **retain as much of the original formatting as possible**. For example when changing the header of function (type hints, return type), only the modified header is patched back to the original code.
 

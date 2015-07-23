@@ -17,7 +17,7 @@ Download, run ```php convert.php <source dir> <destination dir>```. All *.php fi
 
 Currently, these tranformations of PHP 7 structures are supported:
 
-### Null coalesce operator
+### Null Coalesce Operator
 
 #### Example 1
 ```php
@@ -37,7 +37,7 @@ becomes
 !is_null(42) ? 42 : $bar;
 ```
 
-### Return type
+### Return Type Declarations
 
 #### Example
 ```php
@@ -48,7 +48,7 @@ becomes
 function foo() {}
 ```
 
-### Scalar type hint
+### Scalar Type Declarations
 
 #### Example
 ```php
@@ -59,7 +59,7 @@ becomes
 function foo($x, SomeClass $y) {}
 ```
 
-### Spaceship operator
+### Spaceship operator (Combined Comparison Operator)
 
 #### Example
 ```php
@@ -70,7 +70,7 @@ becomes
 $foo > $bar ? 1 : ($foo < $bar ? -1 : 0);
 ```
 
-### Spaceship operator (deprecated in PHP 7)
+### Deprecation of PHP 4-Style Constructors
 
 #### Example
 ```php
@@ -87,7 +87,7 @@ class Foo
 }
 ```
 
-### Anonymous class
+### Anonymous Classes
 
 #### Example
 ```php
@@ -117,7 +117,7 @@ class AnonymousClass_1
 
 Class declaration is appended to the end of source file. Multiple anonymous classes are numbered accordingly.
 
-### intdiv function
+### intdiv() function
 
 #### Example
 ```php
@@ -144,3 +144,16 @@ function foo($x, SomeClass $y)
     return isset($foo) ? $foo : ($one > $two ? 1 : ($one < $two ? -1 : 0));
 }
 ```
+
+## What is missing?
+
+* Unicode Codepoint Escape Syntax
+* Closure call() Method
+* Filtered unserialize()
+* IntlChar Class
+* Expectations
+* Group use Declarations
+* Generator Return Expressions
+* Generator Delegation
+
+and other features... Some of them are not trivial to implement.

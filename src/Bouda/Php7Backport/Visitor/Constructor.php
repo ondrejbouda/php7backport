@@ -29,7 +29,7 @@ class Constructor extends Php7Backport\Visitor
 
             foreach ($node->stmts as $stmt)
             {
-                if ($stmt instanceof ClassMethod && $stmt->name == $className)
+                if ($stmt instanceof ClassMethod && strcasecmp($stmt->name, $className) == 0)
                 {
                     return $this->tranformAndSave($stmt);
                 }

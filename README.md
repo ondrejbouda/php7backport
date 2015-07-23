@@ -11,7 +11,7 @@ Included is a script for recursive conversion of whole directory.
 
 ## Usage
 
-Download, run ```convert.php <source dir> <destination dir>```. All *.php files from source dir will be copied to destination dir and backported, retaining the folder structure.
+Download, run ```php convert.php <source dir> <destination dir>```. All *.php files from source dir will be copied to destination dir and backported, retaining the folder structure. No other files will be converted.
 
 ## Transformations
 

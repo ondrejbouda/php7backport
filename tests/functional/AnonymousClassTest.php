@@ -23,11 +23,11 @@ echo $foo;
 
         $expected = '<?php 
 
-$util->setLogger(new AnonymousClass_1(\'test.log\'));
+$util->setLogger(new AnonymousClass_HASH(\'test.log\'));
 
 echo $foo;
 
-class AnonymousClass_1
+class AnonymousClass_HASH
 {
     function __construct($file)
     {
@@ -38,6 +38,9 @@ class AnonymousClass_1
     }
 }
 ';
-        $this->assertEquals($expected, $this->backporter->port($code));
+        $expected = '#' . preg_quote($expected) . '#';
+        $expected = str_replace('HASH', '[0-9a-f]{32}', $expected);
+
+        $this->assertRegExp($expected, $this->backporter->port($code));
     }
 }

@@ -53,11 +53,11 @@ class PatchCollectionTest extends PHPUnit_Framework_TestCase
     }
 
 
-    public function testGetNextId()
+    public function testGetUniqueId()
     {
-        $id1 = $this->patches->getNextId();
-        $id2 = $this->patches->getNextId();
+        $id1 = $this->patches->getUniqueId();
+        $id2 = $this->patches->getUniqueId();
 
-        $this->assertEquals(1, $id2 - $id1);
+        $this->assertNotEquals($id1, $id2);
     }
 }

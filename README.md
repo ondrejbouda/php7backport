@@ -89,7 +89,7 @@ $util->setLogger(new class("test.log") {
 ```
 becomes
 ```php
-$util->setLogger(new AnonymousClass_1(\'test.log\'));
+$util->setLogger(new AnonymousClass_1('test.log'));
 
 class AnonymousClass_1
 {

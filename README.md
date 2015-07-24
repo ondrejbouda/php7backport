@@ -75,23 +75,6 @@ becomes
 $foo > $bar ? 1 : ($foo < $bar ? -1 : 0);
 ```
 
-### Deprecation of PHP 4-Style Constructors
-
-#### Example
-```php
-class Foo
-{
-    function Foo($bar) {}
-}
-```
-becomes
-```php
-class Foo
-{
-    function __construct($bar) {}
-}
-```
-
 ### Anonymous Classes
 
 #### Example

@@ -15,32 +15,30 @@ class DirectoryBackporter
         $backporter = new Backporter;
 
         $iterator = 
-        new \CallbackFilterIterator(
             new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($sourceDir)), function($file)
-        {
-            return $file;
-        });
+                new \RecursiveDirectoryIterator($sourceDir));
 
         foreach ($iterator as $file)
         {
+            if (!$file->isFile() || !in_array($file->getExtension(), ['php', 'phpt', 'phtml'], TRUE))
+            {
+                continue;
+            }
+
             $newPath = preg_replace("#^$sourceDir#", $destinationDir, $file);
 
-            if ($file->isDir() && !file_exists($newPath))
+            $dir = dirname($newPath);
+            if (!is_dir($dir))
             {
-                mkdir($newPath);
-
+                mkdir($dir, 0777, true);
                 if ($output) echo "mkdir $newPath\n";
             }
-            elseif ($file->isFile() && in_array($file->getExtension(), ['php', 'phpt', 'phtml'], TRUE))
-            {
-                $original = file_get_contents($file);
 
-                file_put_contents($newPath, $backporter->port($original));
+            $original = file_get_contents($file);
 
-                if ($output) echo "ported file $newPath\n";
-            }
-            
+            file_put_contents($newPath, $backporter->port($original));
+
+            if ($output) echo "ported file $newPath\n";
         }
     }
 }

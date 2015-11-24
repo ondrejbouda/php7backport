@@ -24,7 +24,7 @@ class DirectoryBackporter
 
         foreach ($iterator as $file)
         {
-            $newPath = preg_replace("#^$sourceDir#", $destinationDir, $file);
+            $newPath = preg_replace("#^" . preg_quote($sourceDir) . "#", preg_quote($destinationDir), $file);
 
             if ($file->isDir() && !file_exists($newPath))
             {

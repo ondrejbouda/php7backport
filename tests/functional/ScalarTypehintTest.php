@@ -8,7 +8,7 @@ class ScalarTypehintTest extends BackporterFunctionalTestAbstract
     /**
      * @dataProvider invalidTypeHintProvider
      */
-    public function testScalarTypeHint(string $typeHint)
+    public function testScalarTypeHint($typeHint)
     {
         $code = '<?php function foo(' . $typeHint . ' $x, SomeClass $y) {}';
         $expected = '<?php function foo($x, SomeClass $y) {}';
@@ -16,7 +16,7 @@ class ScalarTypehintTest extends BackporterFunctionalTestAbstract
     }
 
 
-    public function invalidTypeHintProvider() : array
+    public function invalidTypeHintProvider()
     {
         return [
             ['float'],

@@ -19,7 +19,7 @@ use PhpParser\Node\Param;
  */
 class ScalarTypehint extends Php7Backport\Visitor
 {
-    const INVALID_TYPE_HINTS = [
+    private static $INVALID_TYPE_HINTS = [
         'int',
         'float',
         'double',
@@ -34,7 +34,7 @@ class ScalarTypehint extends Php7Backport\Visitor
     {
         if ($node instanceof Param
             && isset($node->type->parts[0])
-            && in_array($node->type->parts[0], self::INVALID_TYPE_HINTS))
+            && in_array($node->type->parts[0], self::$INVALID_TYPE_HINTS, true))
         {
             return $this->tranformAndSave($node);
         }
